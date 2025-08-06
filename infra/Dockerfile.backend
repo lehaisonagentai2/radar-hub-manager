@@ -1,0 +1,16 @@
+# Backend Dockerfile
+FROM golang:1.22-alpine AS build
+WORKDIR /app
+COPY backend/go.mod backend/go.sum ./
+RUN go mod download
+COPY backend .
+RUN go build -o radar-hub-manager main.go
+
+FROM alpine:3.18
+WORKDIR /app
+COPY --from=build /app/radar-hub-manager ./radar-hub-manager
+COPY backend/config.yml ./config.yml
+# Data directory for LevelDB stored on volume
+VOLUME ["/app/data"]
+EXPOSE 8080
+CMD ["./radar-hub-manager"]

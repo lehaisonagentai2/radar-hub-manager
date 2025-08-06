@@ -1,0 +1,10 @@
+# Backend configuration for radar-hub-manager
+server:
+  address: ":8080"
+
+admin:
+  username: "admin"
+  password: "123456"
+
+jwt:
+  secret: "your_jwt_secret_here"

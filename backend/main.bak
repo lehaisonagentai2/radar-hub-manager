@@ -1,0 +1,78 @@
+// package main
+
+// import (
+// 	"log"
+// 	"time"
+
+// 	"github.com/gin-contrib/cors"
+// 	"github.com/gin-gonic/gin"
+// 	"github.com/lehaisonagentai2/radar-hub-manager/backend/config"
+// 	"github.com/lehaisonagentai2/radar-hub-manager/backend/controllers"
+// 	"github.com/lehaisonagentai2/radar-hub-manager/backend/middleware"
+// 	"github.com/lehaisonagentai2/radar-hub-manager/backend/ws"
+// )
+
+// // @title Radar Hub Manager API
+// // @version 1.0
+// // @description Military Radar Station Management System API.
+// // @host localhost:8080
+// // @BasePath /api
+// func main() {
+// 	// load config
+// 	cfg, err := config.Load("config.yml")
+// 	if err != nil {
+// 		log.Fatalf("failed to load config: %v", err)
+// 	}
+
+// 	// create router
+// 	r := gin.Default()
+
+// 	// Enable CORS
+// 	r.Use(cors.New(cors.Config{
+// 		AllowOrigins:     []string{"http://localhost:3000"}, // frontend dev server
+// 		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+// 		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
+// 		ExposeHeaders:    []string{"Content-Length"},
+// 		AllowCredentials: true,
+// 		MaxAge:           12 * time.Hour,
+// 	}))
+
+// 	// public routes
+// 	r.POST("/api/login", controllers.Login)
+// 	// first-time password change for root admin
+// 	r.POST("/api/login/change-password", controllers.ChangePassword)
+
+// 	// protected
+// 	auth := r.Group("/api")
+// 	auth.Use(middleware.JWTAuth(cfg.JWT.Secret))
+// 	{
+// 		// user management for ROOT_ADMIN
+// 		u := auth.Group("/users")
+// 		u.Use(middleware.RoleAuth("ROOT_ADMIN"))
+// 		{
+// 			u.POST("", controllers.CreateUser)
+// 			u.GET("", controllers.ListUsers)
+// 			u.PUT(":id", controllers.UpdateUser)
+// 			u.DELETE(":id", controllers.DeleteUser)
+// 			u.POST(":id/reset-password", controllers.ResetPassword)
+// 		}
+
+// 		// shifts endpoint
+// 		auth.GET("/shifts", controllers.ListShifts)
+
+// 		// alerts endpoint for COMMAND_CENTER
+// 		alerts := auth.Group("/alerts")
+// 		alerts.Use(middleware.RoleAuth("COMMAND_CENTER"))
+// 		{
+// 			alerts.POST("", controllers.SendAlert)
+// 		}
+
+// 		// WebSocket for station leads
+// 		wsGroup := auth.Group("/ws")
+// 		wsGroup.Use(middleware.RoleAuth("STATION_LEAD"))
+// 		wsGroup.GET("", ws.WSHandler)
+// 	}
+
+// 	// start server
+// 	r.Run(cfg.Server.Address)
+// }
