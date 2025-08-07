@@ -1,11 +1,14 @@
 package services
 
 import (
+	"encoding/json"
 	"errors"
+	"strconv"
 	"time"
 
-	"github.com/dgrijalva/jwt-go"
+	"github.com/golang-jwt/jwt/v5"
 	"github.com/lehaisonagentai2/radar-hub-manager/backend/internal/models"
+	"github.com/syndtr/goleveldb/leveldb/util"
 )
 
 const secretKey = "radar-hub-manager"
@@ -24,14 +27,44 @@ func (s *UserService) Create(u *models.User) error {
 	if exists {
 		return errors.New("username already exists")
 	}
+
+	// Generate a simple incremental ID (in production, use UUID or proper ID generation)
+	u.ID = int(time.Now().UnixNano() % 1000000) // Simple ID generation
 	u.CreatedAt = time.Now().Unix()
 	u.UpdatedAt = u.CreatedAt
-	return s.db.PutJSON(key, u)
+
+	// Store by both username and ID
+	userKey := "user:" + u.Username
+	userIDKey := "user_id:" + strconv.Itoa(u.ID)
+
+	err = s.db.PutJSON(userKey, u)
+	if err != nil {
+		return err
+	}
+
+	err = s.db.PutJSON(userIDKey, u)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 // Delete removes a user by username.
 func (s *UserService) Delete(username string) error {
 	return s.db.Delete("user:" + username)
+}
+
+// Update modifies an existing user.
+func (s *UserService) Update(u *models.User) error {
+	key := "user:" + u.Username
+	var existingUser models.User
+	if err := s.db.GetJSON(key, &existingUser); err != nil {
+		return err
+	}
+	u.CreatedAt = existingUser.CreatedAt // Preserve creation time
+	u.UpdatedAt = time.Now().Unix()
+	return s.db.PutJSON(key, u)
 }
 
 // VerifyPassword performs a naive comparison (plaintext demo).
@@ -41,7 +74,7 @@ func (s *UserService) VerifyPassword(username, pwd string) (*models.User, error)
 	if err != nil {
 		return nil, err
 	}
-	if u.PasswordHash != pwd {
+	if u.Password != pwd {
 		return nil, errors.New("wrong password")
 	}
 	return &u, nil
@@ -111,4 +144,193 @@ func (s *UserService) GetUserFromToken(tokenString string) (*models.User, error)
 	}
 
 	return &user, nil
+}
+
+func (s *UserService) Login(username, password string) (*models.User, string, error) {
+	user, err := s.VerifyPassword(username, password)
+	if err != nil {
+		return nil, "", err
+	}
+
+	token, err := s.GenerateToken(user)
+	if err != nil {
+		return nil, "", err
+	}
+
+	return user, token, nil
+}
+
+// GetByID retrieves a user by their ID
+func (s *UserService) GetByID(id int) (*models.User, error) {
+	key := "user_id:" + strconv.Itoa(id)
+	var user models.User
+	err := s.db.GetJSON(key, &user)
+	if err != nil {
+		return nil, errors.New("user not found")
+	}
+	return &user, nil
+}
+
+// GetByUsername retrieves a user by their username
+func (s *UserService) GetByUsername(username string) (*models.User, error) {
+	key := "user:" + username
+	var user models.User
+	err := s.db.GetJSON(key, &user)
+	if err != nil {
+		return nil, errors.New("user not found")
+	}
+	return &user, nil
+}
+
+// UpdateUser updates an existing user with partial data
+func (s *UserService) UpdateUser(id int, updates map[string]interface{}) (*models.User, error) {
+	// Get existing user
+	user, err := s.GetByID(id)
+	if err != nil {
+		return nil, err
+	}
+
+	// Apply updates
+	if password, ok := updates["password"].(string); ok && password != "" {
+		user.Password = password
+	}
+	if fullName, ok := updates["full_name"].(string); ok && fullName != "" {
+		user.FullName = fullName
+	}
+	if roleID, ok := updates["role_id"].(models.RoleName); ok {
+		user.RoleID = roleID
+	}
+	if stationID, ok := updates["station_id"].(*uint); ok {
+		user.StationID = stationID
+	}
+
+	user.UpdatedAt = time.Now().Unix()
+
+	// Save updated user
+	userKey := "user:" + user.Username
+	userIDKey := "user_id:" + strconv.Itoa(user.ID)
+
+	err = s.db.PutJSON(userKey, user)
+	if err != nil {
+		return nil, err
+	}
+
+	err = s.db.PutJSON(userIDKey, user)
+	if err != nil {
+		return nil, err
+	}
+
+	return user, nil
+}
+
+// DeleteByID deletes a user by their ID
+func (s *UserService) DeleteByID(id int) error {
+	// Get user first to get username
+	user, err := s.GetByID(id)
+	if err != nil {
+		return err
+	}
+
+	// Delete by both username and ID keys
+	userKey := "user:" + user.Username
+	userIDKey := "user_id:" + strconv.Itoa(id)
+
+	err = s.db.Delete(userKey)
+	if err != nil {
+		return err
+	}
+
+	err = s.db.Delete(userIDKey)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// List retrieves all users
+func (s *UserService) List() ([]*models.User, error) {
+	var users []*models.User
+
+	// This is a simplified implementation - in a real system you'd want pagination
+	// For now, we'll iterate through user keys
+	iter := s.db.NewIterator(util.BytesPrefix([]byte("user:")), nil)
+	defer iter.Release()
+
+	for iter.Next() {
+		var user models.User
+		err := json.Unmarshal(iter.Value(), &user)
+		if err != nil {
+			continue // Skip invalid entries
+		}
+		users = append(users, &user)
+	}
+
+	return users, nil
+}
+
+// UpdateByUsername updates an existing user by username with partial data
+func (s *UserService) UpdateByUsername(username string, updates map[string]interface{}) (*models.User, error) {
+	// Get existing user
+	user, err := s.GetByUsername(username)
+	if err != nil {
+		return nil, err
+	}
+
+	// Apply updates
+	if password, ok := updates["password"].(string); ok && password != "" {
+		user.Password = password
+	}
+	if fullName, ok := updates["full_name"].(string); ok && fullName != "" {
+		user.FullName = fullName
+	}
+	if roleID, ok := updates["role_id"].(models.RoleName); ok {
+		user.RoleID = roleID
+	}
+	if stationID, ok := updates["station_id"].(*uint); ok {
+		user.StationID = stationID
+	}
+
+	user.UpdatedAt = time.Now().Unix()
+
+	// Save updated user
+	userKey := "user:" + user.Username
+	userIDKey := "user_id:" + strconv.Itoa(user.ID)
+
+	err = s.db.PutJSON(userKey, user)
+	if err != nil {
+		return nil, err
+	}
+
+	err = s.db.PutJSON(userIDKey, user)
+	if err != nil {
+		return nil, err
+	}
+
+	return user, nil
+}
+
+// DeleteByUsername deletes a user by their username
+func (s *UserService) DeleteByUsername(username string) error {
+	// Get user first to get ID
+	user, err := s.GetByUsername(username)
+	if err != nil {
+		return err
+	}
+
+	// Delete by both username and ID keys
+	userKey := "user:" + username
+	userIDKey := "user_id:" + strconv.Itoa(user.ID)
+
+	err = s.db.Delete(userKey)
+	if err != nil {
+		return err
+	}
+
+	err = s.db.Delete(userIDKey)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

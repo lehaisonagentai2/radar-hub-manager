@@ -23,12 +23,11 @@ type Role struct {
 // Người dùng hệ thống
 
 type User struct {
-	ID           string `json:"id"` // UUID dưới dạng chuỗi
-	Username     string `json:"username"`
-	PasswordHash string `json:"-"`
-	FullName     string `json:"full_name"`
-	RoleID       uint   `json:"role_id"`
-	Role         Role   `json:"role,omitempty"`
+	ID       int      `json:"id"` // UUID dưới dạng chuỗi
+	Username string   `json:"username"`
+	Password string   `json:"password,omitempty"` // Chỉ dùng khi tạo mới, không trả về
+	FullName string   `json:"full_name"`
+	RoleID   RoleName `json:"role_id"`
 
 	// Nếu là OPERATOR: trạm mà người dùng trực thuộc
 	StationID *uint    `json:"station_id,omitempty"`

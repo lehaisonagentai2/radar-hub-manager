@@ -1,0 +1,1208 @@
+basePath: /v1/api/radar-hub-manager
+definitions:
+  github_com_lehaisonagentai2_radar-hub-manager_backend_internal_models.Command:
+    properties:
+      acknowledged_at:
+        type: integer
+      content:
+        type: string
+      created_at:
+        type: integer
+      from_user_id:
+        description: UUID dưới dạng chuỗi
+        type: string
+      id:
+        type: integer
+      sent_at:
+        type: integer
+      to_station_id:
+        type: integer
+    type: object
+  github_com_lehaisonagentai2_radar-hub-manager_backend_internal_models.RoleName:
+    enum:
+    - ADMIN
+    - OPERATOR
+    - HQ
+    type: string
+    x-enum-comments:
+      RoleAdmin: Quản trị hệ thống
+      RoleHQ: Cán bộ Sở chỉ huy
+      RoleOperator: Nhân viên vận hành trạm
+    x-enum-descriptions:
+    - Quản trị hệ thống
+    - Nhân viên vận hành trạm
+    - Cán bộ Sở chỉ huy
+    x-enum-varnames:
+    - RoleAdmin
+    - RoleOperator
+    - RoleHQ
+  github_com_lehaisonagentai2_radar-hub-manager_backend_internal_models.Schedule:
+    properties:
+      commander:
+        description: ====== Thông tin kíp trực cho khung giờ này ======
+        type: string
+      created_at:
+        type: integer
+      crew:
+        description: Danh sách kíp trực
+        type: string
+      end_hhmm:
+        description: '"0330"'
+        type: string
+      id:
+        type: integer
+      phone:
+        description: Số liên lạc
+        type: string
+      start_hhmm:
+        description: '"0130"'
+        type: string
+      station_id:
+        type: integer
+      updated_at:
+        type: integer
+    type: object
+  github_com_lehaisonagentai2_radar-hub-manager_backend_internal_models.Station:
+    properties:
+      created_at:
+        type: integer
+      distance_to_coast:
+        description: km
+        type: number
+      elevation:
+        description: mét so với mực nước biển
+        type: number
+      id:
+        type: integer
+      latitude:
+        type: number
+      longitude:
+        type: number
+      name:
+        type: string
+      note:
+        description: ghi chú tự do
+        type: string
+      status:
+        description: '"ACTIVE" / "INACTIVE" (tính từ lịch)'
+        type: string
+      updated_at:
+        type: integer
+    type: object
+  github_com_lehaisonagentai2_radar-hub-manager_backend_internal_models.User:
+    properties:
+      created_at:
+        type: integer
+      full_name:
+        type: string
+      id:
+        description: UUID dưới dạng chuỗi
+        type: integer
+      last_login:
+        type: integer
+      password:
+        description: Chỉ dùng khi tạo mới, không trả về
+        type: string
+      role_id:
+        $ref: '#/definitions/github_com_lehaisonagentai2_radar-hub-manager_backend_internal_models.RoleName'
+      station:
+        $ref: '#/definitions/github_com_lehaisonagentai2_radar-hub-manager_backend_internal_models.Station'
+      station_id:
+        description: 'Nếu là OPERATOR: trạm mà người dùng trực thuộc'
+        type: integer
+      updated_at:
+        type: integer
+      username:
+        type: string
+    type: object
+  internal_handlers.CreateCommandRequest:
+    properties:
+      content:
+        type: string
+      to_station_id:
+        type: integer
+    required:
+    - content
+    - to_station_id
+    type: object
+  internal_handlers.CreateScheduleRequest:
+    properties:
+      commander:
+        type: string
+      crew:
+        type: string
+      end_hhmm:
+        type: string
+      phone:
+        type: string
+      start_hhmm:
+        type: string
+    required:
+    - end_hhmm
+    - start_hhmm
+    type: object
+  internal_handlers.CreateStationRequest:
+    properties:
+      distance_to_coast:
+        example: 15.2
+        type: number
+      elevation:
+        example: 10.5
+        type: number
+      id:
+        example: 1
+        type: integer
+      latitude:
+        example: 21.0285
+        type: number
+      longitude:
+        example: 105.8542
+        type: number
+      name:
+        example: Station Alpha
+        type: string
+      note:
+        example: Main radar station
+        type: string
+      status:
+        example: ACTIVE
+        type: string
+    required:
+    - latitude
+    - longitude
+    - name
+    type: object
+  internal_handlers.CreateUserRequest:
+    properties:
+      full_name:
+        example: John Doe
+        type: string
+      password:
+        example: password123
+        type: string
+      role_id:
+        allOf:
+        - $ref: '#/definitions/github_com_lehaisonagentai2_radar-hub-manager_backend_internal_models.RoleName'
+        example: OPERATOR
+      station_id:
+        example: 1
+        type: integer
+      username:
+        example: johndoe
+        type: string
+    required:
+    - full_name
+    - password
+    - role_id
+    - username
+    type: object
+  internal_handlers.ErrorResponse:
+    properties:
+      error:
+        type: string
+    type: object
+  internal_handlers.LoginRequest:
+    properties:
+      password:
+        example: password123
+        type: string
+      username:
+        example: admin
+        type: string
+    required:
+    - password
+    - username
+    type: object
+  internal_handlers.LoginResponse:
+    properties:
+      token:
+        type: string
+      user:
+        $ref: '#/definitions/github_com_lehaisonagentai2_radar-hub-manager_backend_internal_models.User'
+    type: object
+  internal_handlers.UpdateScheduleRequest:
+    properties:
+      commander:
+        type: string
+      crew:
+        type: string
+      end_hhmm:
+        type: string
+      phone:
+        type: string
+      start_hhmm:
+        type: string
+    type: object
+  internal_handlers.UpdateStationRequest:
+    properties:
+      distance_to_coast:
+        example: 16
+        type: number
+      elevation:
+        example: 12
+        type: number
+      latitude:
+        example: 21.029
+        type: number
+      longitude:
+        example: 105.855
+        type: number
+      name:
+        example: Updated Station Alpha
+        type: string
+      note:
+        example: Updated radar station
+        type: string
+      status:
+        example: INACTIVE
+        type: string
+    type: object
+  internal_handlers.UpdateUserRequest:
+    properties:
+      full_name:
+        example: John Smith
+        type: string
+      password:
+        example: newpassword123
+        type: string
+      role_id:
+        allOf:
+        - $ref: '#/definitions/github_com_lehaisonagentai2_radar-hub-manager_backend_internal_models.RoleName'
+        example: ADMIN
+      station_id:
+        example: 2
+        type: integer
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  description: This is the API server for the Radar Hub Manager system
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Radar Hub Manager API
+  version: "1.0"
+paths:
+  /auth/login:
+    post:
+      consumes:
+      - application/json
+      description: Authenticate user and return user info with JWT token
+      parameters:
+      - description: Login credentials
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/internal_handlers.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successful login
+          schema:
+            $ref: '#/definitions/internal_handlers.LoginResponse'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/internal_handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/internal_handlers.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/internal_handlers.ErrorResponse'
+      summary: User login
+      tags:
+      - auth
+  /auth/me:
+    get:
+      consumes:
+      - application/json
+      description: Get information about the currently authenticated user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User information
+          schema:
+            $ref: '#/definitions/github_com_lehaisonagentai2_radar-hub-manager_backend_internal_models.User'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/internal_handlers.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/internal_handlers.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get current user info
+      tags:
+      - auth
+  /commands:
+    get:
+      description: List all commands or commands for a specific station
+      parameters:
+      - description: Station ID to filter commands
+        in: query
+        name: station_id
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/github_com_lehaisonagentai2_radar-hub-manager_backend_internal_models.Command'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/internal_handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/internal_handlers.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/internal_handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/internal_handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: List commands
+      tags:
+      - commands
+    post:
+      consumes:
+      - application/json
+      description: Create a new command to send to a station (HQ only)
+      parameters:
+      - description: Command data
+        in: body
+        name: command
+        required: true
+        schema:
+          $ref: '#/definitions/internal_handlers.CreateCommandRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/github_com_lehaisonagentai2_radar-hub-manager_backend_internal_models.Command'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/internal_handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/internal_handlers.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/internal_handlers.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/internal_handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/internal_handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Create a new command
+      tags:
+      - commands
+  /commands/{id}:
+    get:
+      description: Get a specific command by ID
+      parameters:
+      - description: Command ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_lehaisonagentai2_radar-hub-manager_backend_internal_models.Command'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/internal_handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/internal_handlers.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/internal_handlers.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/internal_handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get a command by ID
+      tags:
+      - commands
+  /commands/{id}/acknowledge:
+    put:
+      consumes:
+      - application/json
+      description: Acknowledge a command by ID (Operator only)
+      parameters:
+      - description: Command ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_lehaisonagentai2_radar-hub-manager_backend_internal_models.Command'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/internal_handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/internal_handlers.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/internal_handlers.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/internal_handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/internal_handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Acknowledge a command
+      tags:
+      - commands
+  /station-commands/station/{station_id}/unacknowledged:
+    get:
+      description: List unacknowledged commands for a specific station (Operator only)
+      parameters:
+      - description: Station ID
+        in: path
+        name: station_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/github_com_lehaisonagentai2_radar-hub-manager_backend_internal_models.Command'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/internal_handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/internal_handlers.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/internal_handlers.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/internal_handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: List unacknowledged commands
+      tags:
+      - commands
+  /station-schedules/station/{station_id}:
+    get:
+      description: Get all schedules for a specific station (Operator only)
+      parameters:
+      - description: Station ID
+        in: path
+        name: station_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/github_com_lehaisonagentai2_radar-hub-manager_backend_internal_models.Schedule'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/internal_handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/internal_handlers.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/internal_handlers.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/internal_handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: List schedules for a station
+      tags:
+      - schedules
+    post:
+      consumes:
+      - application/json
+      description: Create a new schedule for a station (Operator only)
+      parameters:
+      - description: Station ID
+        in: path
+        name: station_id
+        required: true
+        type: integer
+      - description: Schedule data
+        in: body
+        name: schedule
+        required: true
+        schema:
+          $ref: '#/definitions/internal_handlers.CreateScheduleRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/github_com_lehaisonagentai2_radar-hub-manager_backend_internal_models.Schedule'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/internal_handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/internal_handlers.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/internal_handlers.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/internal_handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/internal_handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Create a new schedule
+      tags:
+      - schedules
+  /station-schedules/station/{station_id}/{schedule_id}:
+    delete:
+      description: Delete a schedule by station ID and schedule ID (Operator only)
+      parameters:
+      - description: Station ID
+        in: path
+        name: station_id
+        required: true
+        type: integer
+      - description: Schedule ID
+        in: path
+        name: schedule_id
+        required: true
+        type: integer
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/internal_handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/internal_handlers.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/internal_handlers.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/internal_handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/internal_handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Delete a schedule
+      tags:
+      - schedules
+    get:
+      description: Get a specific schedule by station ID and schedule ID (Operator
+        only)
+      parameters:
+      - description: Station ID
+        in: path
+        name: station_id
+        required: true
+        type: integer
+      - description: Schedule ID
+        in: path
+        name: schedule_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_lehaisonagentai2_radar-hub-manager_backend_internal_models.Schedule'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/internal_handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/internal_handlers.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/internal_handlers.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/internal_handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get a schedule by ID
+      tags:
+      - schedules
+    put:
+      consumes:
+      - application/json
+      description: Update an existing schedule by station ID and schedule ID (Operator
+        only)
+      parameters:
+      - description: Station ID
+        in: path
+        name: station_id
+        required: true
+        type: integer
+      - description: Schedule ID
+        in: path
+        name: schedule_id
+        required: true
+        type: integer
+      - description: Updated schedule data
+        in: body
+        name: schedule
+        required: true
+        schema:
+          $ref: '#/definitions/internal_handlers.UpdateScheduleRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_lehaisonagentai2_radar-hub-manager_backend_internal_models.Schedule'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/internal_handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/internal_handlers.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/internal_handlers.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/internal_handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/internal_handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Update a schedule
+      tags:
+      - schedules
+  /stations:
+    get:
+      consumes:
+      - application/json
+      description: Get a list of all radar stations. Only users with ADMIN role can
+        perform this action.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of stations
+          schema:
+            items:
+              $ref: '#/definitions/github_com_lehaisonagentai2_radar-hub-manager_backend_internal_models.Station'
+            type: array
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/internal_handlers.ErrorResponse'
+        "403":
+          description: Forbidden - Admin access required
+          schema:
+            $ref: '#/definitions/internal_handlers.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/internal_handlers.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: List all stations (Admin only)
+      tags:
+      - stations
+    post:
+      consumes:
+      - application/json
+      description: Create a new radar station. Only users with ADMIN role can perform
+        this action.
+      parameters:
+      - description: Station creation data
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/internal_handlers.CreateStationRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Station created successfully
+          schema:
+            $ref: '#/definitions/github_com_lehaisonagentai2_radar-hub-manager_backend_internal_models.Station'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/internal_handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/internal_handlers.ErrorResponse'
+        "403":
+          description: Forbidden - Admin access required
+          schema:
+            $ref: '#/definitions/internal_handlers.ErrorResponse'
+        "409":
+          description: Conflict - Station already exists
+          schema:
+            $ref: '#/definitions/internal_handlers.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/internal_handlers.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Create a new station (Admin only)
+      tags:
+      - stations
+  /stations/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a radar station. Only users with ADMIN role can perform
+        this action.
+      parameters:
+      - description: Station ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Station deleted successfully
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/internal_handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/internal_handlers.ErrorResponse'
+        "403":
+          description: Forbidden - Admin access required
+          schema:
+            $ref: '#/definitions/internal_handlers.ErrorResponse'
+        "404":
+          description: Station not found
+          schema:
+            $ref: '#/definitions/internal_handlers.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/internal_handlers.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Delete a station (Admin only)
+      tags:
+      - stations
+    get:
+      consumes:
+      - application/json
+      description: Get station information by ID. Only users with ADMIN role can perform
+        this action.
+      parameters:
+      - description: Station ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Station information
+          schema:
+            $ref: '#/definitions/github_com_lehaisonagentai2_radar-hub-manager_backend_internal_models.Station'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/internal_handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/internal_handlers.ErrorResponse'
+        "403":
+          description: Forbidden - Admin access required
+          schema:
+            $ref: '#/definitions/internal_handlers.ErrorResponse'
+        "404":
+          description: Station not found
+          schema:
+            $ref: '#/definitions/internal_handlers.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/internal_handlers.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get station by ID (Admin only)
+      tags:
+      - stations
+    put:
+      consumes:
+      - application/json
+      description: Update station information. Only users with ADMIN role can perform
+        this action.
+      parameters:
+      - description: Station ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Station update data
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/internal_handlers.UpdateStationRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Station updated successfully
+          schema:
+            $ref: '#/definitions/github_com_lehaisonagentai2_radar-hub-manager_backend_internal_models.Station'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/internal_handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/internal_handlers.ErrorResponse'
+        "403":
+          description: Forbidden - Admin access required
+          schema:
+            $ref: '#/definitions/internal_handlers.ErrorResponse'
+        "404":
+          description: Station not found
+          schema:
+            $ref: '#/definitions/internal_handlers.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/internal_handlers.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Update an existing station (Admin only)
+      tags:
+      - stations
+  /users:
+    get:
+      consumes:
+      - application/json
+      description: Get a list of all users. Only users with ADMIN role can perform
+        this action.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of users
+          schema:
+            items:
+              $ref: '#/definitions/github_com_lehaisonagentai2_radar-hub-manager_backend_internal_models.User'
+            type: array
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/internal_handlers.ErrorResponse'
+        "403":
+          description: Forbidden - Admin access required
+          schema:
+            $ref: '#/definitions/internal_handlers.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/internal_handlers.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: List all users (Admin only)
+      tags:
+      - users
+    post:
+      consumes:
+      - application/json
+      description: Create a new user account. Only users with ADMIN role can perform
+        this action.
+      parameters:
+      - description: User creation data
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/internal_handlers.CreateUserRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: User created successfully
+          schema:
+            $ref: '#/definitions/github_com_lehaisonagentai2_radar-hub-manager_backend_internal_models.User'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/internal_handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/internal_handlers.ErrorResponse'
+        "403":
+          description: Forbidden - Admin access required
+          schema:
+            $ref: '#/definitions/internal_handlers.ErrorResponse'
+        "409":
+          description: Conflict - Username already exists
+          schema:
+            $ref: '#/definitions/internal_handlers.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/internal_handlers.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Create a new user (Admin only)
+      tags:
+      - users
+  /users/{username}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a user account. Only users with ADMIN role can perform this
+        action.
+      parameters:
+      - description: Username
+        in: path
+        name: username
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User deleted successfully
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/internal_handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/internal_handlers.ErrorResponse'
+        "403":
+          description: Forbidden - Admin access required
+          schema:
+            $ref: '#/definitions/internal_handlers.ErrorResponse'
+        "404":
+          description: User not found
+          schema:
+            $ref: '#/definitions/internal_handlers.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/internal_handlers.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Delete a user (Admin only)
+      tags:
+      - users
+    get:
+      consumes:
+      - application/json
+      description: Get user information by username. Only users with ADMIN role can
+        perform this action.
+      parameters:
+      - description: Username
+        in: path
+        name: username
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User information
+          schema:
+            $ref: '#/definitions/github_com_lehaisonagentai2_radar-hub-manager_backend_internal_models.User'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/internal_handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/internal_handlers.ErrorResponse'
+        "403":
+          description: Forbidden - Admin access required
+          schema:
+            $ref: '#/definitions/internal_handlers.ErrorResponse'
+        "404":
+          description: User not found
+          schema:
+            $ref: '#/definitions/internal_handlers.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/internal_handlers.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get user by username (Admin only)
+      tags:
+      - users
+    put:
+      consumes:
+      - application/json
+      description: Update user information. Only users with ADMIN role can perform
+        this action.
+      parameters:
+      - description: Username
+        in: path
+        name: username
+        required: true
+        type: string
+      - description: User update data
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/internal_handlers.UpdateUserRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User updated successfully
+          schema:
+            $ref: '#/definitions/github_com_lehaisonagentai2_radar-hub-manager_backend_internal_models.User'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/internal_handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/internal_handlers.ErrorResponse'
+        "403":
+          description: Forbidden - Admin access required
+          schema:
+            $ref: '#/definitions/internal_handlers.ErrorResponse'
+        "404":
+          description: User not found
+          schema:
+            $ref: '#/definitions/internal_handlers.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/internal_handlers.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Update an existing user (Admin only)
+      tags:
+      - users
+securityDefinitions:
+  ApiKeyAuth:
+    description: Type "Bearer" followed by a space and JWT token.
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
