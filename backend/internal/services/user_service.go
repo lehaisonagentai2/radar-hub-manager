@@ -3,6 +3,7 @@ package services
 import (
 	"encoding/json"
 	"errors"
+	"log"
 	"strconv"
 	"time"
 
@@ -13,9 +14,25 @@ import (
 
 const secretKey = "radar-hub-manager"
 
-type UserService struct{ db *DB }
+type UserService struct {
+	db     *DB
+	lastID int
+}
 
-func NewUserService(db *DB) *UserService { return &UserService{db} }
+func NewUserService(db *DB) *UserService {
+	sv := &UserService{db: db}
+	lastID, err := sv.LastIDFromDB()
+	if err == nil {
+		sv.lastID = lastID
+	}
+	log.Println("Last user ID:", sv.lastID)
+	return sv
+}
+
+func (s *UserService) NextID() int {
+	s.lastID++
+	return s.lastID
+}
 
 // Create inserts a new user if username not exists.
 func (s *UserService) Create(u *models.User) error {
@@ -29,7 +46,7 @@ func (s *UserService) Create(u *models.User) error {
 	}
 
 	// Generate a simple incremental ID (in production, use UUID or proper ID generation)
-	u.ID = int(time.Now().UnixNano() % 1000000) // Simple ID generation
+	u.ID = (s.NextID())
 	u.CreatedAt = time.Now().Unix()
 	u.UpdatedAt = u.CreatedAt
 
@@ -333,4 +350,26 @@ func (s *UserService) DeleteByUsername(username string) error {
 	}
 
 	return nil
+}
+
+func (s *UserService) LastIDFromDB() (int, error) {
+	var lastID int
+	iter := s.db.NewIterator(util.BytesPrefix([]byte("user:")), nil)
+	defer iter.Release()
+
+	for iter.Next() {
+		var user models.User
+		err := json.Unmarshal(iter.Value(), &user)
+		if err != nil {
+			continue // Skip invalid entries
+		}
+		if user.ID > lastID {
+			lastID = user.ID
+		}
+	}
+
+	if lastID == 0 {
+		return 0, errors.New("no users found")
+	}
+	return lastID, nil
 }

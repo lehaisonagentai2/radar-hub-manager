@@ -1,0 +1,24 @@
+<svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Radar dish -->
+  <ellipse cx="60" cy="45" rx="45" ry="25" fill="#7dd3fc" stroke="#0284c7" stroke-width="2"/>
+  <ellipse cx="60" cy="45" rx="35" ry="20" fill="#38bdf8"/>
+  <ellipse cx="60" cy="45" rx="25" ry="15" fill="#0ea5e9"/>
+  
+  <!-- Radar beam lines -->
+  <line x1="60" y1="45" x2="85" y2="30" stroke="#0369a1" stroke-width="3"/>
+  <line x1="60" y1="45" x2="90" y2="50" stroke="#0369a1" stroke-width="2"/>
+  <line x1="60" y1="45" x2="85" y2="65" stroke="#0369a1" stroke-width="2"/>
+  
+  <!-- Center point -->
+  <circle cx="60" cy="45" r="4" fill="#0c4a6e"/>
+  
+  <!-- Support structure -->
+  <rect x="55" y="65" width="10" height="30" fill="#0369a1"/>
+  <rect x="50" y="90" width="20" height="8" fill="#0369a1"/>
+  <rect x="45" y="95" width="30" height="5" fill="#075985"/>
+  
+  <!-- Signal waves -->
+  <path d="M 85 15 Q 95 20 95 30" stroke="#0284c7" stroke-width="2" fill="none"/>
+  <path d="M 90 10 Q 105 17 105 35" stroke="#0284c7" stroke-width="2" fill="none"/>
+  <path d="M 95 5 Q 115 15 115 40" stroke="#0284c7" stroke-width="2" fill="none"/>
+</svg>

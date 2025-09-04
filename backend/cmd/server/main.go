@@ -27,7 +27,7 @@ import (
 // @license.name Apache 2.0
 // @license.url http://www.apache.org/licenses/LICENSE-2.0.html
 
-// @host localhost:8080
+// @host localhost:8998
 // @BasePath /v1/api/radar-hub-manager
 
 // @securityDefinitions.apikey ApiKeyAuth
@@ -77,7 +77,7 @@ func main() {
 		config.AllowOrigins = []string{
 			"http://localhost:3000", // Replace with your production frontend domain
 			// "https://www.your-frontend-domain.com", // Replace with your production frontend domain
-			"http://localhost:8080", // Allow same origin for Swagger UI
+			"http://localhost:8998", // Allow same origin for Swagger UI
 		}
 		log.Println("CORS: Production mode - restricted origins")
 	}
@@ -205,10 +205,10 @@ func main() {
 		})
 	})
 
-	log.Println("Starting server on :8080")
-	log.Println("Swagger documentation available at: http://localhost:8080/v1/api/radar-hub-manager/swagger/index.html")
+	log.Println("Starting server on :8998")
+	log.Println("Swagger documentation available at: http://localhost:8998/v1/api/radar-hub-manager/swagger/index.html")
 
-	if err := r.Run(":8080"); err != nil {
+	if err := r.Run(":8998"); err != nil {
 		log.Fatal("Failed to start server:", err)
 	}
 }

@@ -273,7 +273,7 @@ definitions:
         example: 2
         type: integer
     type: object
-host: localhost:8080
+host: localhost:8998
 info:
   contact:
     email: support@swagger.io

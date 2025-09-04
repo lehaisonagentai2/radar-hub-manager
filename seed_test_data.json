@@ -1,0 +1,960 @@
+{
+  "roles": [
+    {
+      "id": 1,
+      "name": "ADMIN",
+      "description": "Quản trị hệ thống"
+    },
+    {
+      "id": 2,
+      "name": "HQ",
+      "description": "Cán bộ Sở chỉ huy"
+    },
+    {
+      "id": 3,
+      "name": "OPERATOR",
+      "description": "Nhân viên vận hành trạm"
+    }
+  ],
+  "users": [
+    {
+      "id": 753000,
+      "username": "admin",
+      "password": "123456",
+      "full_name": "Administrator",
+      "role_id": "ADMIN",
+      "created_at": 1756387505,
+      "updated_at": 1756387505
+    },
+    {
+      "id": 753001,
+      "username": "hq_user",
+      "password": "123456",
+      "full_name": "HQ Officer",
+      "role_id": "HQ",
+      "created_at": 1756387505,
+      "updated_at": 1756387505
+    },
+    {
+      "id": 753101,
+      "username": "op_01",
+      "password": "123456",
+      "full_name": "Operator 01",
+      "role_id": "OPERATOR",
+      "station_id": 1,
+      "created_at": 1756387505,
+      "updated_at": 1756387505
+    },
+    {
+      "id": 753102,
+      "username": "op_02",
+      "password": "123456",
+      "full_name": "Operator 02",
+      "role_id": "OPERATOR",
+      "station_id": 2,
+      "created_at": 1756387505,
+      "updated_at": 1756387505
+    },
+    {
+      "id": 753103,
+      "username": "op_03",
+      "password": "123456",
+      "full_name": "Operator 03",
+      "role_id": "OPERATOR",
+      "station_id": 3,
+      "created_at": 1756387505,
+      "updated_at": 1756387505
+    },
+    {
+      "id": 753104,
+      "username": "op_04",
+      "password": "123456",
+      "full_name": "Operator 04",
+      "role_id": "OPERATOR",
+      "station_id": 4,
+      "created_at": 1756387505,
+      "updated_at": 1756387505
+    },
+    {
+      "id": 753105,
+      "username": "op_05",
+      "password": "123456",
+      "full_name": "Operator 05",
+      "role_id": "OPERATOR",
+      "station_id": 5,
+      "created_at": 1756387505,
+      "updated_at": 1756387505
+    },
+    {
+      "id": 753106,
+      "username": "op_06",
+      "password": "123456",
+      "full_name": "Operator 06",
+      "role_id": "OPERATOR",
+      "station_id": 6,
+      "created_at": 1756387505,
+      "updated_at": 1756387505
+    },
+    {
+      "id": 753107,
+      "username": "op_07",
+      "password": "123456",
+      "full_name": "Operator 07",
+      "role_id": "OPERATOR",
+      "station_id": 7,
+      "created_at": 1756387505,
+      "updated_at": 1756387505
+    },
+    {
+      "id": 753108,
+      "username": "op_08",
+      "password": "123456",
+      "full_name": "Operator 08",
+      "role_id": "OPERATOR",
+      "station_id": 8,
+      "created_at": 1756387505,
+      "updated_at": 1756387505
+    },
+    {
+      "id": 753109,
+      "username": "op_09",
+      "password": "123456",
+      "full_name": "Operator 09",
+      "role_id": "OPERATOR",
+      "station_id": 9,
+      "created_at": 1756387505,
+      "updated_at": 1756387505
+    },
+    {
+      "id": 753110,
+      "username": "op_10",
+      "password": "123456",
+      "full_name": "Operator 10",
+      "role_id": "OPERATOR",
+      "station_id": 10,
+      "created_at": 1756387505,
+      "updated_at": 1756387505
+    }
+  ],
+  "stations": [
+    {
+      "id": 1,
+      "code": "RDR-01",
+      "name": "Trạm Radar 01",
+      "latitude": 21.03,
+      "longitude": 105.85,
+      "elevation_m": 659,
+      "province": "",
+      "status": "ACTIVE",
+      "created_at": 1756387505,
+      "updated_at": 1756387505
+    },
+    {
+      "id": 2,
+      "code": "RDR-02",
+      "name": "Trạm Radar 02",
+      "latitude": 21.5,
+      "longitude": 103.0,
+      "elevation_m": 119,
+      "province": "",
+      "status": "ACTIVE",
+      "created_at": 1756387505,
+      "updated_at": 1756387505
+    },
+    {
+      "id": 3,
+      "code": "RDR-03",
+      "name": "Trạm Radar 03",
+      "latitude": 20.95,
+      "longitude": 107.08,
+      "elevation_m": 30,
+      "province": "",
+      "status": "ACTIVE",
+      "created_at": 1756387505,
+      "updated_at": 1756387505
+    },
+    {
+      "id": 4,
+      "code": "RDR-04",
+      "name": "Trạm Radar 04",
+      "latitude": 16.06,
+      "longitude": 108.2,
+      "elevation_m": 764,
+      "province": "",
+      "status": "ACTIVE",
+      "created_at": 1756387505,
+      "updated_at": 1756387505
+    },
+    {
+      "id": 5,
+      "code": "RDR-05",
+      "name": "Trạm Radar 05",
+      "latitude": 10.82,
+      "longitude": 106.63,
+      "elevation_m": 286,
+      "province": "",
+      "status": "ACTIVE",
+      "created_at": 1756387505,
+      "updated_at": 1756387505
+    },
+    {
+      "id": 6,
+      "code": "RDR-06",
+      "name": "Trạm Radar 06",
+      "latitude": 11.94,
+      "longitude": 108.44,
+      "elevation_m": 255,
+      "province": "",
+      "status": "ACTIVE",
+      "created_at": 1756387505,
+      "updated_at": 1756387505
+    },
+    {
+      "id": 7,
+      "code": "RDR-07",
+      "name": "Trạm Radar 07",
+      "latitude": 18.67,
+      "longitude": 105.68,
+      "elevation_m": 233,
+      "province": "",
+      "status": "ACTIVE",
+      "created_at": 1756387505,
+      "updated_at": 1756387505
+    },
+    {
+      "id": 8,
+      "code": "RDR-08",
+      "name": "Trạm Radar 08",
+      "latitude": 9.18,
+      "longitude": 105.15,
+      "elevation_m": 147,
+      "province": "",
+      "status": "ACTIVE",
+      "created_at": 1756387505,
+      "updated_at": 1756387505
+    },
+    {
+      "id": 9,
+      "code": "RDR-09",
+      "name": "Trạm Radar 09",
+      "latitude": 12.25,
+      "longitude": 109.19,
+      "elevation_m": 759,
+      "province": "",
+      "status": "ACTIVE",
+      "created_at": 1756387505,
+      "updated_at": 1756387505
+    },
+    {
+      "id": 10,
+      "code": "RDR-10",
+      "name": "Trạm Radar 10",
+      "latitude": 20.85,
+      "longitude": 106.68,
+      "elevation_m": 109,
+      "province": "",
+      "status": "ACTIVE",
+      "created_at": 1756387505,
+      "updated_at": 1756387505
+    }
+  ],
+  "station_schedules": [
+    {
+      "id": 1,
+      "station_id": 1,
+      "date": "2025-08-28",
+      "start_hhmm": "0000",
+      "end_hhmm": "0130",
+      "commander_on_duty": "Cmd 01",
+      "operators_on_duty": [
+        "Operator 01"
+      ],
+      "station_phone": "02129345092",
+      "personal_phones": [
+        "0941227216"
+      ],
+      "created_at": 1756387505,
+      "updated_at": 1756387505
+    },
+    {
+      "id": 2,
+      "station_id": 1,
+      "date": "2025-08-28",
+      "start_hhmm": "0200",
+      "end_hhmm": "0330",
+      "commander_on_duty": "Cmd 01",
+      "operators_on_duty": [
+        "Operator 01"
+      ],
+      "station_phone": "02175329037",
+      "personal_phones": [
+        "0936687537"
+      ],
+      "created_at": 1756387505,
+      "updated_at": 1756387505
+    },
+    {
+      "id": 3,
+      "station_id": 1,
+      "date": "2025-08-28",
+      "start_hhmm": "1200",
+      "end_hhmm": "1500",
+      "commander_on_duty": "Cmd 01",
+      "operators_on_duty": [
+        "Operator 01"
+      ],
+      "station_phone": "02129587039",
+      "personal_phones": [
+        "0970291817"
+      ],
+      "created_at": 1756387505,
+      "updated_at": 1756387505
+    },
+    {
+      "id": 4,
+      "station_id": 1,
+      "date": "2025-08-28",
+      "start_hhmm": "1400",
+      "end_hhmm": "1630",
+      "commander_on_duty": "Cmd 01",
+      "operators_on_duty": [
+        "Operator 01"
+      ],
+      "station_phone": "02100872248",
+      "personal_phones": [
+        "0931429110"
+      ],
+      "created_at": 1756387505,
+      "updated_at": 1756387505
+    },
+    {
+      "id": 5,
+      "station_id": 1,
+      "date": "2025-08-28",
+      "start_hhmm": "1600",
+      "end_hhmm": "1900",
+      "commander_on_duty": "Cmd 01",
+      "operators_on_duty": [
+        "Operator 01"
+      ],
+      "station_phone": "02145667651",
+      "personal_phones": [
+        "0947295260"
+      ],
+      "created_at": 1756387505,
+      "updated_at": 1756387505
+    },
+    {
+      "id": 6,
+      "station_id": 2,
+      "date": "2025-08-28",
+      "start_hhmm": "0200",
+      "end_hhmm": "0330",
+      "commander_on_duty": "Cmd 02",
+      "operators_on_duty": [
+        "Operator 02"
+      ],
+      "station_phone": "02150992979",
+      "personal_phones": [
+        "0922981052"
+      ],
+      "created_at": 1756387505,
+      "updated_at": 1756387505
+    },
+    {
+      "id": 7,
+      "station_id": 2,
+      "date": "2025-08-28",
+      "start_hhmm": "0600",
+      "end_hhmm": "0830",
+      "commander_on_duty": "Cmd 02",
+      "operators_on_duty": [
+        "Operator 02"
+      ],
+      "station_phone": "02146164955",
+      "personal_phones": [
+        "0991030736"
+      ],
+      "created_at": 1756387505,
+      "updated_at": 1756387505
+    },
+    {
+      "id": 8,
+      "station_id": 2,
+      "date": "2025-08-28",
+      "start_hhmm": "1000",
+      "end_hhmm": "1230",
+      "commander_on_duty": "Cmd 02",
+      "operators_on_duty": [
+        "Operator 02"
+      ],
+      "station_phone": "02105831819",
+      "personal_phones": [
+        "0971662963"
+      ],
+      "created_at": 1756387505,
+      "updated_at": 1756387505
+    },
+    {
+      "id": 9,
+      "station_id": 3,
+      "date": "2025-08-28",
+      "start_hhmm": "0200",
+      "end_hhmm": "0430",
+      "commander_on_duty": "Cmd 03",
+      "operators_on_duty": [
+        "Operator 03"
+      ],
+      "station_phone": "02177490893",
+      "personal_phones": [
+        "0935808537"
+      ],
+      "created_at": 1756387505,
+      "updated_at": 1756387505
+    },
+    {
+      "id": 10,
+      "station_id": 3,
+      "date": "2025-08-28",
+      "start_hhmm": "0800",
+      "end_hhmm": "0930",
+      "commander_on_duty": "Cmd 03",
+      "operators_on_duty": [
+        "Operator 03"
+      ],
+      "station_phone": "02106150444",
+      "personal_phones": [
+        "0998753260"
+      ],
+      "created_at": 1756387505,
+      "updated_at": 1756387505
+    },
+    {
+      "id": 11,
+      "station_id": 3,
+      "date": "2025-08-28",
+      "start_hhmm": "1200",
+      "end_hhmm": "1400",
+      "commander_on_duty": "Cmd 03",
+      "operators_on_duty": [
+        "Operator 03"
+      ],
+      "station_phone": "02138840994",
+      "personal_phones": [
+        "0920709497"
+      ],
+      "created_at": 1756387505,
+      "updated_at": 1756387505
+    },
+    {
+      "id": 12,
+      "station_id": 3,
+      "date": "2025-08-28",
+      "start_hhmm": "1800",
+      "end_hhmm": "2000",
+      "commander_on_duty": "Cmd 03",
+      "operators_on_duty": [
+        "Operator 03"
+      ],
+      "station_phone": "02113556182",
+      "personal_phones": [
+        "0961019678"
+      ],
+      "created_at": 1756387505,
+      "updated_at": 1756387505
+    },
+    {
+      "id": 13,
+      "station_id": 3,
+      "date": "2025-08-28",
+      "start_hhmm": "2000",
+      "end_hhmm": "2230",
+      "commander_on_duty": "Cmd 03",
+      "operators_on_duty": [
+        "Operator 03"
+      ],
+      "station_phone": "02160855700",
+      "personal_phones": [
+        "0995320121"
+      ],
+      "created_at": 1756387505,
+      "updated_at": 1756387505
+    },
+    {
+      "id": 14,
+      "station_id": 4,
+      "date": "2025-08-28",
+      "start_hhmm": "0400",
+      "end_hhmm": "0630",
+      "commander_on_duty": "Cmd 04",
+      "operators_on_duty": [
+        "Operator 04"
+      ],
+      "station_phone": "02194196727",
+      "personal_phones": [
+        "0996977837"
+      ],
+      "created_at": 1756387505,
+      "updated_at": 1756387505
+    },
+    {
+      "id": 15,
+      "station_id": 4,
+      "date": "2025-08-28",
+      "start_hhmm": "0600",
+      "end_hhmm": "0730",
+      "commander_on_duty": "Cmd 04",
+      "operators_on_duty": [
+        "Operator 04"
+      ],
+      "station_phone": "02181756179",
+      "personal_phones": [
+        "0995225343"
+      ],
+      "created_at": 1756387505,
+      "updated_at": 1756387505
+    },
+    {
+      "id": 16,
+      "station_id": 4,
+      "date": "2025-08-28",
+      "start_hhmm": "1000",
+      "end_hhmm": "1200",
+      "commander_on_duty": "Cmd 04",
+      "operators_on_duty": [
+        "Operator 04"
+      ],
+      "station_phone": "02171691040",
+      "personal_phones": [
+        "0942857966"
+      ],
+      "created_at": 1756387505,
+      "updated_at": 1756387505
+    },
+    {
+      "id": 17,
+      "station_id": 4,
+      "date": "2025-08-28",
+      "start_hhmm": "1800",
+      "end_hhmm": "2000",
+      "commander_on_duty": "Cmd 04",
+      "operators_on_duty": [
+        "Operator 04"
+      ],
+      "station_phone": "02162043515",
+      "personal_phones": [
+        "0960929647"
+      ],
+      "created_at": 1756387505,
+      "updated_at": 1756387505
+    },
+    {
+      "id": 18,
+      "station_id": 5,
+      "date": "2025-08-28",
+      "start_hhmm": "0600",
+      "end_hhmm": "0730",
+      "commander_on_duty": "Cmd 05",
+      "operators_on_duty": [
+        "Operator 05"
+      ],
+      "station_phone": "02130742311",
+      "personal_phones": [
+        "0914308421"
+      ],
+      "created_at": 1756387505,
+      "updated_at": 1756387505
+    },
+    {
+      "id": 19,
+      "station_id": 5,
+      "date": "2025-08-28",
+      "start_hhmm": "1000",
+      "end_hhmm": "1230",
+      "commander_on_duty": "Cmd 05",
+      "operators_on_duty": [
+        "Operator 05"
+      ],
+      "station_phone": "02153843426",
+      "personal_phones": [
+        "0945935572"
+      ],
+      "created_at": 1756387505,
+      "updated_at": 1756387505
+    },
+    {
+      "id": 20,
+      "station_id": 5,
+      "date": "2025-08-28",
+      "start_hhmm": "1600",
+      "end_hhmm": "1730",
+      "commander_on_duty": "Cmd 05",
+      "operators_on_duty": [
+        "Operator 05"
+      ],
+      "station_phone": "02128317637",
+      "personal_phones": [
+        "0986125617"
+      ],
+      "created_at": 1756387505,
+      "updated_at": 1756387505
+    },
+    {
+      "id": 21,
+      "station_id": 5,
+      "date": "2025-08-28",
+      "start_hhmm": "2000",
+      "end_hhmm": "2230",
+      "commander_on_duty": "Cmd 05",
+      "operators_on_duty": [
+        "Operator 05"
+      ],
+      "station_phone": "02128538251",
+      "personal_phones": [
+        "0997971488"
+      ],
+      "created_at": 1756387505,
+      "updated_at": 1756387505
+    },
+    {
+      "id": 22,
+      "station_id": 6,
+      "date": "2025-08-28",
+      "start_hhmm": "0400",
+      "end_hhmm": "0600",
+      "commander_on_duty": "Cmd 06",
+      "operators_on_duty": [
+        "Operator 06"
+      ],
+      "station_phone": "02133101783",
+      "personal_phones": [
+        "0985345555"
+      ],
+      "created_at": 1756387505,
+      "updated_at": 1756387505
+    },
+    {
+      "id": 23,
+      "station_id": 6,
+      "date": "2025-08-28",
+      "start_hhmm": "0800",
+      "end_hhmm": "1030",
+      "commander_on_duty": "Cmd 06",
+      "operators_on_duty": [
+        "Operator 06"
+      ],
+      "station_phone": "02178461803",
+      "personal_phones": [
+        "0967503414"
+      ],
+      "created_at": 1756387505,
+      "updated_at": 1756387505
+    },
+    {
+      "id": 24,
+      "station_id": 6,
+      "date": "2025-08-28",
+      "start_hhmm": "1200",
+      "end_hhmm": "1500",
+      "commander_on_duty": "Cmd 06",
+      "operators_on_duty": [
+        "Operator 06"
+      ],
+      "station_phone": "02148586340",
+      "personal_phones": [
+        "0939436733"
+      ],
+      "created_at": 1756387505,
+      "updated_at": 1756387505
+    },
+    {
+      "id": 25,
+      "station_id": 6,
+      "date": "2025-08-28",
+      "start_hhmm": "1400",
+      "end_hhmm": "1600",
+      "commander_on_duty": "Cmd 06",
+      "operators_on_duty": [
+        "Operator 06"
+      ],
+      "station_phone": "02168387461",
+      "personal_phones": [
+        "0976238574"
+      ],
+      "created_at": 1756387505,
+      "updated_at": 1756387505
+    },
+    {
+      "id": 26,
+      "station_id": 7,
+      "date": "2025-08-28",
+      "start_hhmm": "0000",
+      "end_hhmm": "0200",
+      "commander_on_duty": "Cmd 07",
+      "operators_on_duty": [
+        "Operator 07"
+      ],
+      "station_phone": "02191332642",
+      "personal_phones": [
+        "0966661351"
+      ],
+      "created_at": 1756387505,
+      "updated_at": 1756387505
+    },
+    {
+      "id": 27,
+      "station_id": 7,
+      "date": "2025-08-28",
+      "start_hhmm": "0200",
+      "end_hhmm": "0330",
+      "commander_on_duty": "Cmd 07",
+      "operators_on_duty": [
+        "Operator 07"
+      ],
+      "station_phone": "02151642594",
+      "personal_phones": [
+        "0961220073"
+      ],
+      "created_at": 1756387505,
+      "updated_at": 1756387505
+    },
+    {
+      "id": 28,
+      "station_id": 7,
+      "date": "2025-08-28",
+      "start_hhmm": "0400",
+      "end_hhmm": "0700",
+      "commander_on_duty": "Cmd 07",
+      "operators_on_duty": [
+        "Operator 07"
+      ],
+      "station_phone": "02171016525",
+      "personal_phones": [
+        "0943744231"
+      ],
+      "created_at": 1756387505,
+      "updated_at": 1756387505
+    },
+    {
+      "id": 29,
+      "station_id": 8,
+      "date": "2025-08-28",
+      "start_hhmm": "0000",
+      "end_hhmm": "0230",
+      "commander_on_duty": "Cmd 08",
+      "operators_on_duty": [
+        "Operator 08"
+      ],
+      "station_phone": "02114972279",
+      "personal_phones": [
+        "0949392920"
+      ],
+      "created_at": 1756387505,
+      "updated_at": 1756387505
+    },
+    {
+      "id": 30,
+      "station_id": 8,
+      "date": "2025-08-28",
+      "start_hhmm": "0200",
+      "end_hhmm": "0500",
+      "commander_on_duty": "Cmd 08",
+      "operators_on_duty": [
+        "Operator 08"
+      ],
+      "station_phone": "02121227574",
+      "personal_phones": [
+        "0970897765"
+      ],
+      "created_at": 1756387505,
+      "updated_at": 1756387505
+    },
+    {
+      "id": 31,
+      "station_id": 8,
+      "date": "2025-08-28",
+      "start_hhmm": "0800",
+      "end_hhmm": "0930",
+      "commander_on_duty": "Cmd 08",
+      "operators_on_duty": [
+        "Operator 08"
+      ],
+      "station_phone": "02196917555",
+      "personal_phones": [
+        "0945351479"
+      ],
+      "created_at": 1756387505,
+      "updated_at": 1756387505
+    },
+    {
+      "id": 32,
+      "station_id": 8,
+      "date": "2025-08-28",
+      "start_hhmm": "1200",
+      "end_hhmm": "1400",
+      "commander_on_duty": "Cmd 08",
+      "operators_on_duty": [
+        "Operator 08"
+      ],
+      "station_phone": "02168139880",
+      "personal_phones": [
+        "0924282218"
+      ],
+      "created_at": 1756387505,
+      "updated_at": 1756387505
+    },
+    {
+      "id": 33,
+      "station_id": 8,
+      "date": "2025-08-28",
+      "start_hhmm": "1600",
+      "end_hhmm": "1830",
+      "commander_on_duty": "Cmd 08",
+      "operators_on_duty": [
+        "Operator 08"
+      ],
+      "station_phone": "02185758349",
+      "personal_phones": [
+        "0978137358"
+      ],
+      "created_at": 1756387505,
+      "updated_at": 1756387505
+    },
+    {
+      "id": 34,
+      "station_id": 9,
+      "date": "2025-08-28",
+      "start_hhmm": "0400",
+      "end_hhmm": "0530",
+      "commander_on_duty": "Cmd 09",
+      "operators_on_duty": [
+        "Operator 09"
+      ],
+      "station_phone": "02180388981",
+      "personal_phones": [
+        "0953507489"
+      ],
+      "created_at": 1756387505,
+      "updated_at": 1756387505
+    },
+    {
+      "id": 35,
+      "station_id": 9,
+      "date": "2025-08-28",
+      "start_hhmm": "0600",
+      "end_hhmm": "0900",
+      "commander_on_duty": "Cmd 09",
+      "operators_on_duty": [
+        "Operator 09"
+      ],
+      "station_phone": "02102614124",
+      "personal_phones": [
+        "0925014631"
+      ],
+      "created_at": 1756387505,
+      "updated_at": 1756387505
+    },
+    {
+      "id": 36,
+      "station_id": 9,
+      "date": "2025-08-28",
+      "start_hhmm": "0800",
+      "end_hhmm": "1030",
+      "commander_on_duty": "Cmd 09",
+      "operators_on_duty": [
+        "Operator 09"
+      ],
+      "station_phone": "02141273847",
+      "personal_phones": [
+        "0942138745"
+      ],
+      "created_at": 1756387505,
+      "updated_at": 1756387505
+    },
+    {
+      "id": 37,
+      "station_id": 9,
+      "date": "2025-08-28",
+      "start_hhmm": "1000",
+      "end_hhmm": "1130",
+      "commander_on_duty": "Cmd 09",
+      "operators_on_duty": [
+        "Operator 09"
+      ],
+      "station_phone": "02132329237",
+      "personal_phones": [
+        "0986149359"
+      ],
+      "created_at": 1756387505,
+      "updated_at": 1756387505
+    },
+    {
+      "id": 38,
+      "station_id": 9,
+      "date": "2025-08-28",
+      "start_hhmm": "1800",
+      "end_hhmm": "1930",
+      "commander_on_duty": "Cmd 09",
+      "operators_on_duty": [
+        "Operator 09"
+      ],
+      "station_phone": "02111496211",
+      "personal_phones": [
+        "0975228535"
+      ],
+      "created_at": 1756387505,
+      "updated_at": 1756387505
+    },
+    {
+      "id": 39,
+      "station_id": 10,
+      "date": "2025-08-28",
+      "start_hhmm": "0400",
+      "end_hhmm": "0700",
+      "commander_on_duty": "Cmd 10",
+      "operators_on_duty": [
+        "Operator 10"
+      ],
+      "station_phone": "02173793389",
+      "personal_phones": [
+        "0932162965"
+      ],
+      "created_at": 1756387505,
+      "updated_at": 1756387505
+    },
+    {
+      "id": 40,
+      "station_id": 10,
+      "date": "2025-08-28",
+      "start_hhmm": "1600",
+      "end_hhmm": "1830",
+      "commander_on_duty": "Cmd 10",
+      "operators_on_duty": [
+        "Operator 10"
+      ],
+      "station_phone": "02170823176",
+      "personal_phones": [
+        "0991415657"
+      ],
+      "created_at": 1756387505,
+      "updated_at": 1756387505
+    },
+    {
+      "id": 41,
+      "station_id": 10,
+      "date": "2025-08-28",
+      "start_hhmm": "1800",
+      "end_hhmm": "2100",
+      "commander_on_duty": "Cmd 10",
+      "operators_on_duty": [
+        "Operator 10"
+      ],
+      "station_phone": "02128427073",
+      "personal_phones": [
+        "0982383095"
+      ],
+      "created_at": 1756387505,
+      "updated_at": 1756387505
+    }
+  ]
+}

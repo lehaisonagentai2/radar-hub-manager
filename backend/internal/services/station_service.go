@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"log"
 	"time"
 
 	"github.com/lehaisonagentai2/radar-hub-manager/backend/internal/models"
@@ -13,10 +14,17 @@ import (
 type StationService struct {
 	db       *DB
 	schedSvc *ScheduleService
+	lastID   uint
 }
 
 func NewStationService(db *DB, sched *ScheduleService) *StationService {
-	return &StationService{db: db, schedSvc: sched}
+	sv := &StationService{db: db, schedSvc: sched}
+	lastID, err := sv.LastIDFromDB()
+	if err == nil {
+		sv.lastID = lastID
+	}
+	log.Println("Last station ID:", sv.lastID)
+	return sv
 }
 
 func (s *StationService) ListWithStatus() ([]models.Station, error) {
@@ -52,7 +60,9 @@ func (s *StationService) UpdateNote(id uint, note string) error {
 func (s *StationService) Create(station *models.Station) error {
 	// Generate a simple incremental ID if not provided
 	if station.ID == 0 {
-		station.ID = uint(time.Now().UnixNano() % 1000000) // Simple ID generation
+		station.ID = s.lastID + 1
+		s.lastID = station.ID
+		log.Println("Assigned new station ID:", station.ID)
 	}
 
 	// Check if station with this ID already exists
@@ -131,7 +141,6 @@ func (s *StationService) Delete(id uint) error {
 	if err != nil {
 		return errors.New("station not found")
 	}
-
 	key := fmt.Sprintf("station:%d", id)
 	return s.db.Delete(key)
 }
@@ -163,4 +172,26 @@ func (s *StationService) List() ([]*models.Station, error) {
 	}
 
 	return stations, nil
+}
+
+func (s *StationService) LastIDFromDB() (uint, error) {
+	var lastID uint
+	iter := s.db.NewIterator(util.BytesPrefix([]byte("station:")), nil)
+	defer iter.Release()
+
+	for iter.Next() {
+		var station models.Station
+		err := json.Unmarshal(iter.Value(), &station)
+		if err != nil {
+			continue // Skip invalid entries
+		}
+		if station.ID > lastID {
+			lastID = station.ID
+		}
+	}
+
+	if lastID == 0 {
+		return 0, errors.New("no stations found")
+	}
+	return lastID, nil
 }

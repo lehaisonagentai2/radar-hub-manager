@@ -2,11 +2,13 @@ package services
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"sync/atomic"
 	"time"
 
 	"github.com/lehaisonagentai2/radar-hub-manager/backend/internal/models"
+	"github.com/syndtr/goleveldb/leveldb/util"
 )
 
 type ScheduleService struct {
@@ -14,7 +16,14 @@ type ScheduleService struct {
 	seq uint64
 }
 
-func NewScheduleService(db *DB) *ScheduleService { return &ScheduleService{db: db} }
+func NewScheduleService(db *DB) *ScheduleService {
+	sv := &ScheduleService{db: db}
+	lastID, err := sv.LastIDFromDB()
+	if err == nil {
+		sv.seq = uint64(lastID)
+	}
+	return sv
+}
 
 func (s *ScheduleService) nextID() uint {
 	return uint(atomic.AddUint64(&s.seq, 1))
@@ -142,4 +151,26 @@ func betweenHHMM(t, start, end string) bool {
 		return t >= start && t < end
 	}
 	return t >= start || t < end // overnight
+}
+
+func (s *ScheduleService) LastIDFromDB() (uint, error) {
+	var lastID uint
+	iter := s.db.NewIterator(util.BytesPrefix([]byte("schedule:")), nil)
+	defer iter.Release()
+
+	for iter.Next() {
+		var schedule models.Schedule
+		err := json.Unmarshal(iter.Value(), &schedule)
+		if err != nil {
+			continue // Skip invalid entries
+		}
+		if schedule.ID > lastID {
+			lastID = schedule.ID
+		}
+	}
+
+	if lastID == 0 {
+		return 0, errors.New("no schedules found")
+	}
+	return lastID, nil
 }
