@@ -3,7 +3,6 @@ package main
 
 import (
 	"log"
-	"os"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -63,24 +62,10 @@ func main() {
 	// This allows frontend applications from different domains to access the API
 	config := cors.DefaultConfig()
 
-	// Check if we're in development mode
-	isDevelopment := os.Getenv("GIN_MODE") != "release"
-
-	if isDevelopment {
-		// Development: Allow all origins for easier testing
-		// WARNING: Do not use this in production!
-		config.AllowAllOrigins = true
-		log.Println("CORS: Development mode - allowing all origins")
-	} else {
-		// Production: Restrict to specific origins for security
-		// TODO: Replace with your actual frontend domain(s)
-		config.AllowOrigins = []string{
-			"http://localhost:3000", // Replace with your production frontend domain
-			// "https://www.your-frontend-domain.com", // Replace with your production frontend domain
-			"http://localhost:8998", // Allow same origin for Swagger UI
-		}
-		log.Println("CORS: Production mode - restricted origins")
-	}
+	// Allow all origins for all environments
+	// WARNING: This allows any domain to access your API
+	config.AllowAllOrigins = true
+	log.Println("CORS: Allowing all origins")
 
 	config.AllowMethods = []string{"GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"}
 	config.AllowHeaders = []string{
