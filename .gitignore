@@ -20,3 +20,4 @@
 **/cmd/*/*
 !/cmd/*/*.go
 !/cmd/*/main.go
+!/backend/cmd/test-data/*
