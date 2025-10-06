@@ -11,6 +11,8 @@ import {
   BuildingOfficeIcon,
   UsersIcon,
   ClockIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
 } from '@heroicons/react/24/outline';
 import { useAuthStore, useWebSocketStore } from '../lib/store';
 import { hasPermission, formatRole } from '../lib/utils';
@@ -29,6 +31,7 @@ const navigation = [
 
 export default function Layout({ children }: LayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const { user, logout } = useAuthStore();
   const { notifications } = useWebSocketStore();
   const navigate = useNavigate();
@@ -105,10 +108,26 @@ export default function Layout({ children }: LayoutProps) {
       </Transition.Root>
 
       {/* Static sidebar for desktop */}
-      <div className="hidden md:flex md:w-64 md:flex-col md:fixed md:inset-y-0">
+      <div className={cn(
+        "hidden md:flex md:flex-col md:fixed md:inset-y-0 transition-all duration-300",
+        sidebarCollapsed ? "md:w-16" : "md:w-64"
+      )}>
         <div className="flex flex-col flex-grow pt-5 bg-white overflow-y-auto border-r border-gray-200">
-          <div className="flex items-center flex-shrink-0 px-4">
-            <h1 className="text-lg font-semibold text-gray-900">Radar Hub Manager</h1>
+          <div className="flex items-center flex-shrink-0 px-4 justify-between">
+            {!sidebarCollapsed && (
+              <h1 className="text-lg font-semibold text-gray-900">Radar Hub Manager</h1>
+            )}
+            <button
+              onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+              className="p-1.5 rounded-md text-gray-400 hover:text-gray-600 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              title={sidebarCollapsed ? "Mở rộng sidebar" : "Thu gọn sidebar"}
+            >
+              {sidebarCollapsed ? (
+                <ChevronRightIcon className="h-5 w-5" />
+              ) : (
+                <ChevronLeftIcon className="h-5 w-5" />
+              )}
+            </button>
           </div>
           <div className="mt-5 flex-grow flex flex-col">
             <nav className="flex-1 px-2 pb-4 space-y-1">
@@ -118,11 +137,16 @@ export default function Layout({ children }: LayoutProps) {
                   href={item.href}
                   className={cn(
                     'text-gray-600 hover:bg-gray-50 hover:text-gray-900',
-                    'group flex items-center px-2 py-2 text-sm font-medium rounded-md'
+                    'group flex items-center px-2 py-2 text-sm font-medium rounded-md',
+                    sidebarCollapsed ? 'justify-center' : ''
                   )}
+                  title={sidebarCollapsed ? item.name : ''}
                 >
-                  <item.icon className="text-gray-400 mr-3 h-5 w-5" />
-                  {item.name}
+                  <item.icon className={cn(
+                    "text-gray-400 h-5 w-5",
+                    sidebarCollapsed ? "" : "mr-3"
+                  )} />
+                  {!sidebarCollapsed && item.name}
                 </a>
               ))}
             </nav>
@@ -131,7 +155,10 @@ export default function Layout({ children }: LayoutProps) {
       </div>
 
       {/* Main content */}
-      <div className="md:pl-64 flex flex-col flex-1">
+      <div className={cn(
+        "flex flex-col flex-1 transition-all duration-300",
+        sidebarCollapsed ? "md:pl-16" : "md:pl-64"
+      )}>
         <div className="sticky top-0 z-10 flex-shrink-0 flex h-16 bg-white shadow">
           <button
             type="button"

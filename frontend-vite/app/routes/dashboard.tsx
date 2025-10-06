@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useAuthStore, useWebSocketStore } from '../lib/store';
-import { hasPermission } from '../lib/utils';
+import { hasPermission, getStationStats } from '../lib/utils';
+import { stationsAPI, schedulesAPI } from '../lib/api';
 import Layout from '../components/Layout';
 import StatusBar from '../components/StatusBar';
 import ShiftGrid from '../components/ShiftGrid';
@@ -24,6 +25,14 @@ export default function Dashboard() {
   const [selectedSchedules, setSelectedSchedules] = useState<any[]>([]);
   const [isStationModalOpen, setIsStationModalOpen] = useState(false);
   const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
+  
+  // Station statistics state
+  const [stationStats, setStationStats] = useState({
+    totalStations: 0,
+    activeStations: 0,
+    inactiveStations: 0,
+    loading: true
+  });
 
   useEffect(() => {
     // Connect to WebSocket when component mounts
@@ -31,6 +40,32 @@ export default function Dashboard() {
       connect(token);
     }
   }, [token, connect]);
+
+  useEffect(() => {
+    // Load station statistics
+    loadStationStats();
+    
+    // Refresh statistics every 30 seconds
+    const interval = setInterval(loadStationStats, 30000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const loadStationStats = async () => {
+    try {
+      console.log('🔄 Loading station statistics...');
+      const stats = await getStationStats();
+      setStationStats({
+        totalStations: stats.totalStations,
+        activeStations: stats.activeStations,
+        inactiveStations: stats.inactiveStations,
+        loading: false
+      });
+      console.log('✅ Station statistics loaded:', stats);
+    } catch (error) {
+      console.error('❌ Failed to load station statistics:', error);
+      setStationStats(prev => ({ ...prev, loading: false }));
+    }
+  };
 
   const handleCellClick = (station: any, hour: number, schedules: any[]) => {
     setSelectedStation(station);
@@ -71,7 +106,7 @@ export default function Dashboard() {
 
             <ShiftGrid onCellClick={handleCellClick} />
 
-            <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="mt-8 grid grid-cols-1 md:grid-cols-4 gap-6">
               {/* Quick Stats */}
               <div className="bg-white overflow-hidden shadow rounded-lg">
                 <div className="p-5">
@@ -87,8 +122,13 @@ export default function Dashboard() {
                           Tổng số trạm
                         </dt>
                         <dd className="text-lg font-medium text-gray-900">
-                          {/* This would be populated from store */}
-                          --
+                          {stationStats.loading ? (
+                            <div className="animate-pulse">
+                              <div className="h-6 bg-gray-200 rounded w-8"></div>
+                            </div>
+                          ) : (
+                            stationStats.totalStations
+                          )}
                         </dd>
                       </dl>
                     </div>
@@ -110,7 +150,45 @@ export default function Dashboard() {
                           Trạm hoạt động
                         </dt>
                         <dd className="text-lg font-medium text-gray-900">
-                          --
+                          {stationStats.loading ? (
+                            <div className="animate-pulse">
+                              <div className="h-6 bg-gray-200 rounded w-8"></div>
+                            </div>
+                          ) : (
+                            <span className="text-green-600 font-bold">
+                              {stationStats.activeStations}
+                            </span>
+                          )}
+                        </dd>
+                      </dl>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-white overflow-hidden shadow rounded-lg">
+                <div className="p-5">
+                  <div className="flex items-center">
+                    <div className="flex-shrink-0">
+                      <div className="w-8 h-8 bg-gray-500 rounded-md flex items-center justify-center">
+                        <span className="text-white text-sm font-medium">○</span>
+                      </div>
+                    </div>
+                    <div className="ml-5 w-0 flex-1">
+                      <dl>
+                        <dt className="text-sm font-medium text-gray-500 truncate">
+                          Trạm không hoạt động
+                        </dt>
+                        <dd className="text-lg font-medium text-gray-900">
+                          {stationStats.loading ? (
+                            <div className="animate-pulse">
+                              <div className="h-6 bg-gray-200 rounded w-8"></div>
+                            </div>
+                          ) : (
+                            <span className="text-gray-600 font-bold">
+                              {stationStats.inactiveStations}
+                            </span>
+                          )}
                         </dd>
                       </dl>
                     </div>
@@ -129,15 +207,39 @@ export default function Dashboard() {
                     <div className="ml-5 w-0 flex-1">
                       <dl>
                         <dt className="text-sm font-medium text-gray-500 truncate">
-                          Cảnh báo
+                          Tỷ lệ hoạt động
                         </dt>
                         <dd className="text-lg font-medium text-gray-900">
-                          0
+                          {stationStats.loading ? (
+                            <div className="animate-pulse">
+                              <div className="h-6 bg-gray-200 rounded w-12"></div>
+                            </div>
+                          ) : (
+                            <span className={`font-bold ${
+                              stationStats.totalStations === 0 ? 'text-gray-500' :
+                              (stationStats.activeStations / stationStats.totalStations) >= 0.8 ? 'text-green-600' :
+                              (stationStats.activeStations / stationStats.totalStations) >= 0.5 ? 'text-yellow-600' :
+                              'text-red-600'
+                            }`}>
+                              {stationStats.totalStations === 0 
+                                ? '0%' 
+                                : `${Math.round((stationStats.activeStations / stationStats.totalStations) * 100)}%`
+                              }
+                            </span>
+                          )}
                         </dd>
                       </dl>
                     </div>
                   </div>
                 </div>
+              </div>
+            </div>
+
+            {/* Real-time Update Indicator */}
+            <div className="mt-4 flex justify-end">
+              <div className="text-xs text-gray-500 flex items-center">
+                <div className={`w-2 h-2 rounded-full mr-2 ${stationStats.loading ? 'bg-yellow-400 animate-pulse' : 'bg-green-400'}`}></div>
+                {stationStats.loading ? 'Đang cập nhật...' : `Cập nhật lúc ${new Date().toLocaleTimeString('vi-VN')}`}
               </div>
             </div>
 

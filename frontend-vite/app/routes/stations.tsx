@@ -6,7 +6,7 @@ import { PlusIcon, PencilIcon, TrashIcon, XMarkIcon } from '@heroicons/react/24/
 import Layout from '../components/Layout';
 import { stationsAPI } from '../lib/api';
 import { useStationStore, useAuthStore } from '../lib/store';
-import { hasPermission, cn } from '../lib/utils';
+import { hasPermission, cn, getStationStats, getStationsStatus } from '../lib/utils';
 import toast from 'react-hot-toast';
 
 export function meta() {
@@ -33,6 +33,7 @@ export default function Stations() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingStation, setEditingStation] = useState<any>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [statusMap, setStatusMap] = useState<Map<number, boolean>>(new Map());
 
   const {
     register,
@@ -48,6 +49,15 @@ export default function Stations() {
       return;
     }
     loadStations();
+    const loadStaionStatusAynsc = async () => {
+      try {
+        const response = await getStationsStatus();
+        setStatusMap(response);
+      } catch (error: any) {
+        toast.error(error.response?.data?.error || 'Lỗi khi tải trạng thái trạm');
+      }
+    };
+    loadStaionStatusAynsc();
   }, [user]);
 
   const loadStations = async () => {
@@ -172,11 +182,11 @@ export default function Stations() {
                           <div className="ml-2 flex-shrink-0 flex">
                             <p className={cn(
                               'px-2 inline-flex text-xs leading-5 font-semibold rounded-full',
-                              station.status === 'active' 
+                              statusMap.get(station.id) 
                                 ? 'bg-green-100 text-green-800'
                                 : 'bg-red-100 text-red-800'
                             )}>
-                              {station.status === 'active' ? 'Hoạt động' : 'Không hoạt động'}
+                              {statusMap.get(station.id) ? 'Đang hoạt động' : 'Không hoạt động'}
                             </p>
                           </div>
                         </div>
