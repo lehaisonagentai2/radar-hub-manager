@@ -18,6 +18,34 @@ definitions:
       to_station_id:
         type: integer
     type: object
+  github_com_lehaisonagentai2_radar-hub-manager_backend_internal_models.Document:
+    properties:
+      created_at:
+        type: integer
+      description:
+        type: string
+      file_name:
+        description: Tên file gốc
+        type: string
+      file_size:
+        description: Kích thước file (bytes)
+        type: integer
+      file_type:
+        description: MIME type của file
+        type: string
+      file_url:
+        description: Đường dẫn tới file tài liệu
+        type: string
+      id:
+        type: integer
+      title:
+        type: string
+      updated_at:
+        type: integer
+      uploaded_by:
+        description: ID người upload
+        type: integer
+    type: object
   github_com_lehaisonagentai2_radar-hub-manager_backend_internal_models.RoleName:
     enum:
     - ADMIN
@@ -115,6 +143,53 @@ definitions:
       username:
         type: string
     type: object
+  github_com_lehaisonagentai2_radar-hub-manager_backend_internal_models.Vessel:
+    properties:
+      class:
+        description: 'Lớp tàu: "Lớp A, Lớp B, Lớp C, Lớp D"'
+        type: string
+      created_at:
+        type: integer
+      description:
+        description: Mô tả thêm về tàu
+        type: string
+      id:
+        type: integer
+      kind:
+        description: 'Loại tàu : "TC (Tàu chiến), DS (Dân sự) .... "'
+        type: string
+      max_speed:
+        description: Tốc độ tối đa
+        type: string
+      mmsi:
+        description: Maritime Mobile Service Identity
+        type: string
+      name:
+        description: Tên tàu
+        type: string
+      size:
+        description: 'Kích cỡ tàu: "width x height x depth"'
+        type: string
+      specs:
+        description: Thông số kỹ thuật
+        type: string
+      updated_at:
+        type: integer
+      weight:
+        description: Trọng tải tàu
+        type: string
+    type: object
+  github_com_lehaisonagentai2_radar-hub-manager_backend_internal_services.UploadResult:
+    properties:
+      file_name:
+        type: string
+      file_size:
+        type: integer
+      file_type:
+        type: string
+      file_url:
+        type: string
+    type: object
   internal_handlers.CreateCommandRequest:
     properties:
       content:
@@ -124,6 +199,27 @@ definitions:
     required:
     - content
     - to_station_id
+    type: object
+  internal_handlers.CreateDocumentRequest:
+    properties:
+      description:
+        type: string
+      file_name:
+        type: string
+      file_size:
+        type: integer
+      file_type:
+        type: string
+      file_url:
+        type: string
+      title:
+        type: string
+    required:
+    - file_name
+    - file_size
+    - file_type
+    - file_url
+    - title
     type: object
   internal_handlers.CreateScheduleRequest:
     properties:
@@ -196,6 +292,39 @@ definitions:
     - role_id
     - username
     type: object
+  internal_handlers.CreateVesselRequest:
+    properties:
+      class:
+        description: Lớp tàu
+        type: string
+      description:
+        description: Mô tả thêm về tàu
+        type: string
+      kind:
+        description: Loại tàu
+        type: string
+      max_speed:
+        description: Tốc độ tối đa
+        type: string
+      mmsi:
+        description: Maritime Mobile Service Identity
+        type: string
+      name:
+        description: Tên tàu
+        type: string
+      size:
+        description: Kích cỡ tàu
+        type: string
+      specs:
+        description: Thông số kỹ thuật
+        type: string
+      weight:
+        description: Trọng tải tàu
+        type: string
+    required:
+    - mmsi
+    - name
+    type: object
   internal_handlers.ErrorResponse:
     properties:
       error:
@@ -219,6 +348,21 @@ definitions:
         type: string
       user:
         $ref: '#/definitions/github_com_lehaisonagentai2_radar-hub-manager_backend_internal_models.User'
+    type: object
+  internal_handlers.UpdateDocumentRequest:
+    properties:
+      description:
+        type: string
+      file_name:
+        type: string
+      file_size:
+        type: integer
+      file_type:
+        type: string
+      file_url:
+        type: string
+      title:
+        type: string
     type: object
   internal_handlers.UpdateScheduleRequest:
     properties:
@@ -272,6 +416,36 @@ definitions:
       station_id:
         example: 2
         type: integer
+    type: object
+  internal_handlers.UpdateVesselRequest:
+    properties:
+      class:
+        description: Lớp tàu
+        type: string
+      description:
+        description: Mô tả thêm về tàu
+        type: string
+      kind:
+        description: Loại tàu
+        type: string
+      max_speed:
+        description: Tốc độ tối đa
+        type: string
+      mmsi:
+        description: Maritime Mobile Service Identity
+        type: string
+      name:
+        description: Tên tàu
+        type: string
+      size:
+        description: Kích cỡ tàu
+        type: string
+      specs:
+        description: Thông số kỹ thuật
+        type: string
+      weight:
+        description: Trọng tải tàu
+        type: string
     type: object
 host: localhost:8998
 info:
@@ -507,6 +681,209 @@ paths:
       summary: Acknowledge a command
       tags:
       - commands
+  /documents:
+    get:
+      description: Get a list of all documents
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/github_com_lehaisonagentai2_radar-hub-manager_backend_internal_models.Document'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Get all documents
+      tags:
+      - documents
+    post:
+      consumes:
+      - application/json
+      description: Create a new document record
+      parameters:
+      - description: Document data
+        in: body
+        name: document
+        required: true
+        schema:
+          $ref: '#/definitions/internal_handlers.CreateDocumentRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/github_com_lehaisonagentai2_radar-hub-manager_backend_internal_models.Document'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Create a new document
+      tags:
+      - documents
+  /documents/{id}:
+    delete:
+      description: Delete a document by ID
+      parameters:
+      - description: Document ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Delete a document
+      tags:
+      - documents
+    get:
+      description: Get a document by its ID
+      parameters:
+      - description: Document ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_lehaisonagentai2_radar-hub-manager_backend_internal_models.Document'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Get a document by ID
+      tags:
+      - documents
+    put:
+      consumes:
+      - application/json
+      description: Update a document by ID
+      parameters:
+      - description: Document ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Document data
+        in: body
+        name: document
+        required: true
+        schema:
+          $ref: '#/definitions/internal_handlers.UpdateDocumentRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_lehaisonagentai2_radar-hub-manager_backend_internal_models.Document'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Update a document
+      tags:
+      - documents
+  /files/upload:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Upload a file and return the file URL
+      parameters:
+      - description: File to upload
+        in: formData
+        name: file
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_lehaisonagentai2_radar-hub-manager_backend_internal_services.UploadResult'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Upload a file
+      tags:
+      - files
   /station-commands/station/{station_id}/unacknowledged:
     get:
       description: List unacknowledged commands for a specific station (Operator only)
@@ -1199,6 +1576,217 @@ paths:
       summary: Update an existing user (Admin only)
       tags:
       - users
+  /vessels:
+    get:
+      description: Get a list of all vessels or search by name
+      parameters:
+      - description: Search by vessel name (partial match)
+        in: query
+        name: name
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/github_com_lehaisonagentai2_radar-hub-manager_backend_internal_models.Vessel'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Get all vessels or search by name
+      tags:
+      - vessels
+    post:
+      consumes:
+      - application/json
+      description: Create a new vessel record
+      parameters:
+      - description: Vessel data
+        in: body
+        name: vessel
+        required: true
+        schema:
+          $ref: '#/definitions/internal_handlers.CreateVesselRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/github_com_lehaisonagentai2_radar-hub-manager_backend_internal_models.Vessel'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Create a new vessel
+      tags:
+      - vessels
+  /vessels/{id}:
+    delete:
+      description: Delete a vessel by ID
+      parameters:
+      - description: Vessel ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Delete a vessel
+      tags:
+      - vessels
+    get:
+      description: Get a vessel by its ID
+      parameters:
+      - description: Vessel ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_lehaisonagentai2_radar-hub-manager_backend_internal_models.Vessel'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Get a vessel by ID
+      tags:
+      - vessels
+    put:
+      consumes:
+      - application/json
+      description: Update a vessel by ID
+      parameters:
+      - description: Vessel ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Vessel data
+        in: body
+        name: vessel
+        required: true
+        schema:
+          $ref: '#/definitions/internal_handlers.UpdateVesselRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_lehaisonagentai2_radar-hub-manager_backend_internal_models.Vessel'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Update a vessel
+      tags:
+      - vessels
+  /vessels/mmsi/{mmsi}:
+    get:
+      description: Get a vessel by its MMSI (Maritime Mobile Service Identity)
+      parameters:
+      - description: Vessel MMSI
+        in: path
+        name: mmsi
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_lehaisonagentai2_radar-hub-manager_backend_internal_models.Vessel'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Get a vessel by MMSI
+      tags:
+      - vessels
 securityDefinitions:
   ApiKeyAuth:
     description: Type "Bearer" followed by a space and JWT token.

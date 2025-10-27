@@ -88,6 +88,42 @@ export interface Command {
   created_at: number;
 }
 
+export interface Document {
+  id: number;
+  title: string;
+  description: string;
+  file_name: string;
+  file_type: string;
+  file_size: number;
+  file_url: string;
+  created_at: number;
+  updated_at: number;
+}
+
+export interface Vessel {
+  id: number;
+  name: string;
+  mmsi: string;
+  vessel_type: string;
+  length: number;
+  width: number;
+  draft: number;
+  gross_tonnage: number;
+  call_sign: string;
+  imo_number: string;
+  flag: string;
+  destination: string;
+  eta: string;
+  status: string;
+  latitude: number;
+  longitude: number;
+  speed: number;
+  course: number;
+  heading: number;
+  created_at: number;
+  updated_at: number;
+}
+
 // Auth API
 export const authAPI = {
   login: (username: string, password: string) =>
@@ -182,4 +218,105 @@ export const commandsAPI = {
   
   getUnacknowledged: (stationId: number) =>
     api.get(`/station-commands/station/${stationId}/unacknowledged`),
+};
+
+// Documents API
+export const documentsAPI = {
+  getAll: () =>
+    api.get('/documents'),
+  
+  getById: (id: number) =>
+    api.get(`/documents/${id}`),
+  
+  create: (data: {
+    title: string;
+    description?: string;
+    file_name: string;
+    file_type: string;
+    file_size: number;
+    file_url: string;
+  }) =>
+    api.post('/documents', data),
+  
+  update: (id: number, data: {
+    title?: string;
+    description?: string;
+    file_name?: string;
+    file_type?: string;
+    file_size?: number;
+    file_url?: string;
+  }) =>
+    api.put(`/documents/${id}`, data),
+  
+  delete: (id: number) =>
+    api.delete(`/documents/${id}`),
+};
+
+// Files API
+export const filesAPI = {
+  upload: (formData: FormData) =>
+    api.post('/files/upload', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    }),
+};
+
+// Vessels API
+export const vesselsAPI = {
+  getAll: (name?: string) =>
+    api.get('/vessels', { params: name ? { name } : {} }),
+  
+  getById: (id: number) =>
+    api.get(`/vessels/${id}`),
+  
+  getByMMSI: (mmsi: string) =>
+    api.get(`/vessels/mmsi/${mmsi}`),
+  
+  create: (data: {
+    name: string;
+    mmsi: string;
+    vessel_type?: string;
+    length?: number;
+    width?: number;
+    draft?: number;
+    gross_tonnage?: number;
+    call_sign?: string;
+    imo_number?: string;
+    flag?: string;
+    destination?: string;
+    eta?: string;
+    status?: string;
+    latitude?: number;
+    longitude?: number;
+    speed?: number;
+    course?: number;
+    heading?: number;
+  }) =>
+    api.post('/vessels', data),
+  
+  update: (id: number, data: {
+    name?: string;
+    mmsi?: string;
+    vessel_type?: string;
+    length?: number;
+    width?: number;
+    draft?: number;
+    gross_tonnage?: number;
+    call_sign?: string;
+    imo_number?: string;
+    flag?: string;
+    destination?: string;
+    eta?: string;
+    status?: string;
+    latitude?: number;
+    longitude?: number;
+    speed?: number;
+    course?: number;
+    heading?: number;
+  }) =>
+    api.put(`/vessels/${id}`, data),
+  
+  delete: (id: number) =>
+    api.delete(`/vessels/${id}`),
 };

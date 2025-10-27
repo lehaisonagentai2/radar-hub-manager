@@ -94,3 +94,34 @@ type Command struct {
 	AcknowledgedAt *int64 `json:"acknowledged_at,omitempty"`
 	CreatedAt      int64  `json:"created_at"`
 }
+
+// ========================
+// Document Management
+// ========================
+type Document struct {
+	ID          uint   `json:"id"`
+	Title       string `json:"title"`
+	Description string `json:"description,omitempty"`
+	FileUrl     string `json:"file_url"`    // Đường dẫn tới file tài liệu
+	FileName    string `json:"file_name"`   // Tên file gốc
+	FileSize    int64  `json:"file_size"`   // Kích thước file (bytes)
+	FileType    string `json:"file_type"`   // MIME type của file
+	UploadedBy  int    `json:"uploaded_by"` // ID người upload
+	CreatedAt   int64  `json:"created_at"`
+	UpdatedAt   int64  `json:"updated_at"`
+}
+
+type Vessel struct {
+	ID          uint   `json:"id"`
+	Name        string `json:"name"`        // Tên tàu
+	MMSI        string `json:"mmsi"`        // Maritime Mobile Service Identity
+	Kind        string `json:"kind"`        // Loại tàu : "TC (Tàu chiến), DS (Dân sự) .... "
+	Size        string `json:"size"`        // Kích cỡ tàu: "width x height x depth"
+	Weight      string `json:"weight"`      // Trọng tải tàu
+	Class       string `json:"class"`       // Lớp tàu: "Lớp A, Lớp B, Lớp C, Lớp D"
+	Specs       string `json:"specs"`       // Thông số kỹ thuật
+	MaxSpeed    string `json:"max_speed"`   // Tốc độ tối đa
+	Description string `json:"description"` // Mô tả thêm về tàu
+	CreatedAt   int64  `json:"created_at"`
+	UpdatedAt   int64  `json:"updated_at"`
+}

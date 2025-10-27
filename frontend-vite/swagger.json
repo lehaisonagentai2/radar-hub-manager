@@ -15,7 +15,7 @@
         },
         "version": "1.0"
     },
-    "host": "localhost:8080",
+    "host": "localhost:8998",
     "basePath": "/v1/api/radar-hub-manager",
     "paths": {
         "/auth/login": {
@@ -357,6 +357,317 @@
                         "description": "Internal Server Error",
                         "schema": {
                             "$ref": "#/definitions/internal_handlers.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/documents": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Get a list of all documents",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "documents"
+                ],
+                "summary": "Get all documents",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/github_com_lehaisonagentai2_radar-hub-manager_backend_internal_models.Document"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Create a new document record",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "documents"
+                ],
+                "summary": "Create a new document",
+                "parameters": [
+                    {
+                        "description": "Document data",
+                        "name": "document",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/internal_handlers.CreateDocumentRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_lehaisonagentai2_radar-hub-manager_backend_internal_models.Document"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        },
+        "/documents/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Get a document by its ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "documents"
+                ],
+                "summary": "Get a document by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Document ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_lehaisonagentai2_radar-hub-manager_backend_internal_models.Document"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Update a document by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "documents"
+                ],
+                "summary": "Update a document",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Document ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Document data",
+                        "name": "document",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/internal_handlers.UpdateDocumentRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_lehaisonagentai2_radar-hub-manager_backend_internal_models.Document"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Delete a document by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "documents"
+                ],
+                "summary": "Delete a document",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Document ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        },
+        "/files/upload": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Upload a file and return the file URL",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "files"
+                ],
+                "summary": "Upload a file",
+                "parameters": [
+                    {
+                        "type": "file",
+                        "description": "File to upload",
+                        "name": "file",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_lehaisonagentai2_radar-hub-manager_backend_internal_services.UploadResult"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
                         }
                     }
                 }
@@ -1416,6 +1727,329 @@
                     }
                 }
             }
+        },
+        "/vessels": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Get a list of all vessels or search by name",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "vessels"
+                ],
+                "summary": "Get all vessels or search by name",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Search by vessel name (partial match)",
+                        "name": "name",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/github_com_lehaisonagentai2_radar-hub-manager_backend_internal_models.Vessel"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Create a new vessel record",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "vessels"
+                ],
+                "summary": "Create a new vessel",
+                "parameters": [
+                    {
+                        "description": "Vessel data",
+                        "name": "vessel",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/internal_handlers.CreateVesselRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_lehaisonagentai2_radar-hub-manager_backend_internal_models.Vessel"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        },
+        "/vessels/mmsi/{mmsi}": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Get a vessel by its MMSI (Maritime Mobile Service Identity)",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "vessels"
+                ],
+                "summary": "Get a vessel by MMSI",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Vessel MMSI",
+                        "name": "mmsi",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_lehaisonagentai2_radar-hub-manager_backend_internal_models.Vessel"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        },
+        "/vessels/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Get a vessel by its ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "vessels"
+                ],
+                "summary": "Get a vessel by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Vessel ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_lehaisonagentai2_radar-hub-manager_backend_internal_models.Vessel"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Update a vessel by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "vessels"
+                ],
+                "summary": "Update a vessel",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Vessel ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Vessel data",
+                        "name": "vessel",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/internal_handlers.UpdateVesselRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_lehaisonagentai2_radar-hub-manager_backend_internal_models.Vessel"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Delete a vessel by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "vessels"
+                ],
+                "summary": "Delete a vessel",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Vessel ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -1442,6 +2076,46 @@
                     "type": "integer"
                 },
                 "to_station_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "github_com_lehaisonagentai2_radar-hub-manager_backend_internal_models.Document": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "integer"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "file_name": {
+                    "description": "Tên file gốc",
+                    "type": "string"
+                },
+                "file_size": {
+                    "description": "Kích thước file (bytes)",
+                    "type": "integer"
+                },
+                "file_type": {
+                    "description": "MIME type của file",
+                    "type": "string"
+                },
+                "file_url": {
+                    "description": "Đường dẫn tới file tài liệu",
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "integer"
+                },
+                "uploaded_by": {
+                    "description": "ID người upload",
                     "type": "integer"
                 }
             }
@@ -1583,6 +2257,73 @@
                 }
             }
         },
+        "github_com_lehaisonagentai2_radar-hub-manager_backend_internal_models.Vessel": {
+            "type": "object",
+            "properties": {
+                "class": {
+                    "description": "Lớp tàu: \"Lớp A, Lớp B, Lớp C, Lớp D\"",
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "integer"
+                },
+                "description": {
+                    "description": "Mô tả thêm về tàu",
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "kind": {
+                    "description": "Loại tàu : \"TC (Tàu chiến), DS (Dân sự) .... \"",
+                    "type": "string"
+                },
+                "max_speed": {
+                    "description": "Tốc độ tối đa",
+                    "type": "string"
+                },
+                "mmsi": {
+                    "description": "Maritime Mobile Service Identity",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "Tên tàu",
+                    "type": "string"
+                },
+                "size": {
+                    "description": "Kích cỡ tàu: \"width x height x depth\"",
+                    "type": "string"
+                },
+                "specs": {
+                    "description": "Thông số kỹ thuật",
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "integer"
+                },
+                "weight": {
+                    "description": "Trọng tải tàu",
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_lehaisonagentai2_radar-hub-manager_backend_internal_services.UploadResult": {
+            "type": "object",
+            "properties": {
+                "file_name": {
+                    "type": "string"
+                },
+                "file_size": {
+                    "type": "integer"
+                },
+                "file_type": {
+                    "type": "string"
+                },
+                "file_url": {
+                    "type": "string"
+                }
+            }
+        },
         "internal_handlers.CreateCommandRequest": {
             "type": "object",
             "required": [
@@ -1595,6 +2336,36 @@
                 },
                 "to_station_id": {
                     "type": "integer"
+                }
+            }
+        },
+        "internal_handlers.CreateDocumentRequest": {
+            "type": "object",
+            "required": [
+                "file_name",
+                "file_size",
+                "file_type",
+                "file_url",
+                "title"
+            ],
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "file_name": {
+                    "type": "string"
+                },
+                "file_size": {
+                    "type": "integer"
+                },
+                "file_type": {
+                    "type": "string"
+                },
+                "file_url": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
                 }
             }
         },
@@ -1699,6 +2470,51 @@
                 }
             }
         },
+        "internal_handlers.CreateVesselRequest": {
+            "type": "object",
+            "required": [
+                "mmsi",
+                "name"
+            ],
+            "properties": {
+                "class": {
+                    "description": "Lớp tàu",
+                    "type": "string"
+                },
+                "description": {
+                    "description": "Mô tả thêm về tàu",
+                    "type": "string"
+                },
+                "kind": {
+                    "description": "Loại tàu",
+                    "type": "string"
+                },
+                "max_speed": {
+                    "description": "Tốc độ tối đa",
+                    "type": "string"
+                },
+                "mmsi": {
+                    "description": "Maritime Mobile Service Identity",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "Tên tàu",
+                    "type": "string"
+                },
+                "size": {
+                    "description": "Kích cỡ tàu",
+                    "type": "string"
+                },
+                "specs": {
+                    "description": "Thông số kỹ thuật",
+                    "type": "string"
+                },
+                "weight": {
+                    "description": "Trọng tải tàu",
+                    "type": "string"
+                }
+            }
+        },
         "internal_handlers.ErrorResponse": {
             "type": "object",
             "properties": {
@@ -1732,6 +2548,29 @@
                 },
                 "user": {
                     "$ref": "#/definitions/github_com_lehaisonagentai2_radar-hub-manager_backend_internal_models.User"
+                }
+            }
+        },
+        "internal_handlers.UpdateDocumentRequest": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "file_name": {
+                    "type": "string"
+                },
+                "file_size": {
+                    "type": "integer"
+                },
+                "file_type": {
+                    "type": "string"
+                },
+                "file_url": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
                 }
             }
         },
@@ -1810,6 +2649,47 @@
                 "station_id": {
                     "type": "integer",
                     "example": 2
+                }
+            }
+        },
+        "internal_handlers.UpdateVesselRequest": {
+            "type": "object",
+            "properties": {
+                "class": {
+                    "description": "Lớp tàu",
+                    "type": "string"
+                },
+                "description": {
+                    "description": "Mô tả thêm về tàu",
+                    "type": "string"
+                },
+                "kind": {
+                    "description": "Loại tàu",
+                    "type": "string"
+                },
+                "max_speed": {
+                    "description": "Tốc độ tối đa",
+                    "type": "string"
+                },
+                "mmsi": {
+                    "description": "Maritime Mobile Service Identity",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "Tên tàu",
+                    "type": "string"
+                },
+                "size": {
+                    "description": "Kích cỡ tàu",
+                    "type": "string"
+                },
+                "specs": {
+                    "description": "Thông số kỹ thuật",
+                    "type": "string"
+                },
+                "weight": {
+                    "description": "Trọng tải tàu",
+                    "type": "string"
                 }
             }
         }

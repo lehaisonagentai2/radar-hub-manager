@@ -30,7 +30,7 @@ func main() {
 	}
 	fmt.Printf("Loaded %d roles, %d users, %d stations, %d schedules\n",
 		len(testData.Roles), len(testData.Users), len(testData.Stations), len(testData.Schedules))
-	db, err := services.OpenDB("/Users/maianhnguyen/go/src/github.com/lehaisonagentai2/radar-hub-manager/backend/cmd/server/data")
+	db, err := services.OpenDB("../server/data")
 	if err != nil {
 		log.Fatal("Failed to initialize database:", err)
 	}

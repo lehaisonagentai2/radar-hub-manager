@@ -47,6 +47,9 @@ func main() {
 	scheduleService := services.NewScheduleService(db)
 	commandService := services.NewCommandService(db)
 	stationService := services.NewStationService(db, scheduleService)
+	documentService := services.NewDocumentService(db)
+	vesselService := services.NewVesselService(db)
+	fileUploadService := services.NewFileUploadService("./uploads", "http://localhost:8998")
 
 	// Initialize handlers
 	authHandler := handlers.NewAuthHandler(userService)
@@ -54,6 +57,8 @@ func main() {
 	stationHandler := handlers.NewStationHandler(stationService)
 	scheduleHandler := handlers.NewScheduleHandler(scheduleService, stationService)
 	commandHandler := handlers.NewCommandHandler(commandService, stationService)
+	documentHandler := handlers.NewDocumentHandler(documentService, fileUploadService)
+	vesselHandler := handlers.NewVesselHandler(vesselService)
 
 	// Initialize Gin router
 	r := gin.Default()
@@ -88,6 +93,9 @@ func main() {
 
 	// Apply CORS middleware
 	r.Use(cors.New(config))
+
+	// Static file serving for uploaded files
+	r.Static("/uploads", "./uploads")
 
 	// Swagger endpoint
 	r.GET("/v1/api/radar-hub-manager/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
@@ -179,6 +187,36 @@ func main() {
 		stationCommands.Use(middleware.JWTMiddleware(userService), middleware.OperatorMiddleware())
 		{
 			stationCommands.GET("/station/:station_id/unacknowledged", commandHandler.ListUnacknowledgedCommands) // GET /station-commands/station/:station_id/unacknowledged
+		}
+
+		// File upload routes (require authentication)
+		files := api.Group("/files")
+		files.Use(middleware.JWTMiddleware(userService))
+		{
+			files.POST("/upload", documentHandler.UploadFile) // POST /files/upload
+		}
+
+		// Document management routes (require authentication)
+		documents := api.Group("/documents")
+		documents.Use(middleware.JWTMiddleware(userService))
+		{
+			documents.POST("", documentHandler.CreateDocument)       // POST /documents
+			documents.GET("", documentHandler.ListDocuments)         // GET /documents
+			documents.GET("/:id", documentHandler.GetDocument)       // GET /documents/:id
+			documents.PUT("/:id", documentHandler.UpdateDocument)    // PUT /documents/:id
+			documents.DELETE("/:id", documentHandler.DeleteDocument) // DELETE /documents/:id
+		}
+
+		// Vessel management routes (require authentication)
+		vessels := api.Group("/vessels")
+		vessels.Use(middleware.JWTMiddleware(userService))
+		{
+			vessels.POST("", vesselHandler.CreateVessel)              // POST /vessels
+			vessels.GET("", vesselHandler.ListVessels)                // GET /vessels (supports ?name=search_term)
+			vessels.GET("/:id", vesselHandler.GetVessel)              // GET /vessels/:id
+			vessels.GET("/mmsi/:mmsi", vesselHandler.GetVesselByMMSI) // GET /vessels/mmsi/:mmsi
+			vessels.PUT("/:id", vesselHandler.UpdateVessel)           // PUT /vessels/:id
+			vessels.DELETE("/:id", vesselHandler.DeleteVessel)        // DELETE /vessels/:id
 		}
 	}
 

@@ -13,6 +13,9 @@ import {
   ClockIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
+  InformationCircleIcon,
+  DocumentIcon,
+  MapIcon,
 } from '@heroicons/react/24/outline';
 import { useAuthStore, useWebSocketStore } from '../lib/store';
 import { hasPermission, formatRole } from '../lib/utils';
@@ -27,6 +30,9 @@ const navigation = [
   { name: 'Quản lý trạm', href: '/stations', icon: BuildingOfficeIcon, roles: ['ADMIN'] },
   { name: 'Quản lý người dùng', href: '/users', icon: UsersIcon, roles: ['ADMIN'] },
   { name: 'Lịch trực', href: '/schedules', icon: ClockIcon, roles: ['ADMIN', 'HQ', 'OPERATOR'] },
+  { name: 'Quản lý tài liệu', href: '/documents', icon: DocumentIcon, roles: ['ADMIN', 'HQ'] },
+  { name: 'Quản lý tàu thuyền', href: '/vessels', icon: MapIcon, roles: ['ADMIN', 'HQ', 'OPERATOR'] },
+  { name: 'Giới thiệu', href: '/about', icon: InformationCircleIcon, roles: ['ADMIN', 'HQ', 'OPERATOR'] },
 ];
 
 export default function Layout({ children }: LayoutProps) {
